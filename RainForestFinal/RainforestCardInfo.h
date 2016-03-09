@@ -11,4 +11,6 @@
 + (NSArray *)mammalCards;
 + (NSArray *)reptileCards;
 
++ (NSArray *)allAnimals;
+
 @end

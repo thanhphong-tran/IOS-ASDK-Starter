@@ -1,51 +1,44 @@
 
 #import "AnimalTableNodeController.h"
 #import "RainforestCardInfo.h"
+#import "CardNode.h"
 
-@interface AnimalTableNodeController ()<ASTableDataSource>
-@property (nonatomic) ASDisplayNode *theNode;
+static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
-@property (nonatomic) ASTableNode *tableNode;
-@property (nonatomic) NSArray *animals;
+@interface AnimalTableNodeController ()<UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray *animals;
 @end
 
 @implementation AnimalTableNodeController
 
 - (instancetype)initWithAnimals:(NSArray *)animals
 {
-//    self.theNode = [[ASDisplayNode alloc] init];
-//    self.theNode.backgroundColor = [self randomColor];
-    ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
-
-    if (!(self = [super initWithNode:tableNode])) { return nil; }
-    
-    self.tableNode = tableNode;
+    if (!(self = [super init])) { return nil; }
     
     self.animals = animals;
     
-    self.tableNode.dataSource = self;
-    
-//    [self.node addSubnode:self.tableNode];
-    
     return self;
-}
-
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    
-    CGSize size = [UIScreen mainScreen].bounds.size;
-
-    self.theNode.frame = CGRectMake(0, 0, size.width, size.height);
-
-    self.tableNode.frame = self.node.frame;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    [self.tableView registerClass:[CardNode class] forCellReuseIdentifier:kCellReuseIdentifier];
     
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+        
+    [self.view addSubview:self.tableView];
+}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+    self.tableView.frame = self.view.bounds;
 }
 
 #pragma mark ASTableNode DataSource
@@ -54,15 +47,14 @@
     return 1;
 }
 
-- (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ASCellNode *node = [[ASCellNode alloc] init];
-    node.backgroundColor = [UIColor greenColor];
-    node.preferredFrameSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, 200);
+    CardNode *cell = [self.tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifier];
     
-    return ^{
-        return node;
-    };
+    cell.backgroundColor = [UIColor lightGrayColor];
+    cell.animalInfo = self.animals[indexPath.row];
+    
+    return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -70,14 +62,14 @@
     return self.animals.count;
 }
 
-- (UIColor *)randomColor;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-    CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-    CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-    UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
-    
-    return color;
+    return self.view.bounds.size.height;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 @end

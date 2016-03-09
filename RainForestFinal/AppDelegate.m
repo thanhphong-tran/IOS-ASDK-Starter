@@ -1,6 +1,5 @@
 
 #import "AppDelegate.h"
-#import "ViewController.h"
 #import "AnimalTableNodeController.h"
 #import "RainforestCardInfo.h"
 
@@ -17,8 +16,7 @@
     
     _window = [[UIWindow alloc] initWithFrame:windowRect];
     
-    ViewController *vc = [[ViewController alloc] init];
-//    AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo reptileCards]];
+    AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo allAnimals]];
     [_window setRootViewController:vc];
     
     [_window makeKeyAndVisible];

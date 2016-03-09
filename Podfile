@@ -5,5 +5,6 @@
 
 target 'RainForestFinal' do
   pod 'AsyncDisplayKit', '1.9.7'
+  pod "AFNetworking", "~> 2.0"
 end
 

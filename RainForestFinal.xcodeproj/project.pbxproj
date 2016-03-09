@@ -10,12 +10,12 @@
 		91F8487F51508425FCE7F8C0 /* libPods-RainForestFinal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AFCB603422C3729A0BEAF1 /* libPods-RainForestFinal.a */; };
 		AE2FB48F1C821D0C003AD243 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB48E1C821D0C003AD243 /* main.m */; };
 		AE2FB4921C821D0C003AD243 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4911C821D0C003AD243 /* AppDelegate.m */; };
-		AE2FB4951C821D0C003AD243 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4941C821D0C003AD243 /* ViewController.m */; };
 		AE2FB49A1C821D0C003AD243 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE2FB4991C821D0C003AD243 /* Assets.xcassets */; };
 		AE2FB4A71C822006003AD243 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4A61C822006003AD243 /* UIImage+ImageEffects.m */; };
 		AE2FB4B41C822CA2003AD243 /* Factories.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4B31C822CA2003AD243 /* Factories.m */; };
 		AE2FB4BA1C8242C2003AD243 /* RainforestCardInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */; };
 		AE2FB4BD1C82725A003AD243 /* AnimalTableNodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */; };
+		AE2FB4C31C8DDAB5003AD243 /* CardNode.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4C21C8DDAB5003AD243 /* CardNode.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +26,6 @@
 		AE2FB48E1C821D0C003AD243 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AE2FB4901C821D0C003AD243 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AE2FB4911C821D0C003AD243 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AE2FB4931C821D0C003AD243 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		AE2FB4941C821D0C003AD243 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		AE2FB4991C821D0C003AD243 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE2FB49E1C821D0C003AD243 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE2FB4A51C822006003AD243 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
@@ -38,6 +36,8 @@
 		AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RainforestCardInfo.m; sourceTree = "<group>"; };
 		AE2FB4BB1C82725A003AD243 /* AnimalTableNodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimalTableNodeController.h; sourceTree = "<group>"; };
 		AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimalTableNodeController.m; sourceTree = "<group>"; };
+		AE2FB4C11C8DDAB5003AD243 /* CardNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardNode.h; sourceTree = "<group>"; };
+		AE2FB4C21C8DDAB5003AD243 /* CardNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardNode.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,10 +84,12 @@
 			children = (
 				AE2FB4901C821D0C003AD243 /* AppDelegate.h */,
 				AE2FB4911C821D0C003AD243 /* AppDelegate.m */,
-				AE2FB4931C821D0C003AD243 /* ViewController.h */,
-				AE2FB4941C821D0C003AD243 /* ViewController.m */,
 				AE2FB4BB1C82725A003AD243 /* AnimalTableNodeController.h */,
 				AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */,
+				AE2FB4C11C8DDAB5003AD243 /* CardNode.h */,
+				AE2FB4C21C8DDAB5003AD243 /* CardNode.m */,
+				AE2FB4B81C8242C2003AD243 /* RainforestCardInfo.h */,
+				AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */,
 				AE2FB4991C821D0C003AD243 /* Assets.xcassets */,
 				AE2FB49E1C821D0C003AD243 /* Info.plist */,
 				AE2FB4A41C821FEA003AD243 /* Misc */,
@@ -107,8 +109,6 @@
 		AE2FB4A41C821FEA003AD243 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				AE2FB4B81C8242C2003AD243 /* RainforestCardInfo.h */,
-				AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */,
 				AE2FB4B21C822CA2003AD243 /* Factories.h */,
 				AE2FB4B31C822CA2003AD243 /* Factories.m */,
 				AE2FB4A51C822006003AD243 /* UIImage+ImageEffects.h */,
@@ -246,9 +246,9 @@
 			files = (
 				AE2FB4BA1C8242C2003AD243 /* RainforestCardInfo.m in Sources */,
 				AE2FB4A71C822006003AD243 /* UIImage+ImageEffects.m in Sources */,
-				AE2FB4951C821D0C003AD243 /* ViewController.m in Sources */,
 				AE2FB4921C821D0C003AD243 /* AppDelegate.m in Sources */,
 				AE2FB48F1C821D0C003AD243 /* main.m in Sources */,
+				AE2FB4C31C8DDAB5003AD243 /* CardNode.m in Sources */,
 				AE2FB4B41C822CA2003AD243 /* Factories.m in Sources */,
 				AE2FB4BD1C82725A003AD243 /* AnimalTableNodeController.m in Sources */,
 			);

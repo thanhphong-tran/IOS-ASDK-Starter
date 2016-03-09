@@ -1,6 +1,6 @@
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
-@interface AnimalTableNodeController : ASViewController
+@interface AnimalTableNodeController : UIViewController
 - (instancetype)initWithAnimals:(NSArray *)animals;
 @end
