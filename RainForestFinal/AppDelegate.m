@@ -17,8 +17,8 @@
     
     _window = [[UIWindow alloc] initWithFrame:windowRect];
     
-    ViewController *vc = [[ViewController alloc] init];
-//    AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo reptileCards]];
+//    ViewController *vc = [[ViewController alloc] init];
+    AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo reptileCards]];
     [_window setRootViewController:vc];
     
     [_window makeKeyAndVisible];
