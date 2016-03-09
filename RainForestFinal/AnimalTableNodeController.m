@@ -1,6 +1,7 @@
 
 #import "AnimalTableNodeController.h"
 #import "RainforestCardInfo.h"
+#import "CardNode.h"
 
 @interface AnimalTableNodeController ()<ASTableDataSource>
 @property (nonatomic) ASDisplayNode *theNode;
@@ -13,8 +14,6 @@
 
 - (instancetype)initWithAnimals:(NSArray *)animals
 {
-//    self.theNode = [[ASDisplayNode alloc] init];
-//    self.theNode.backgroundColor = [self randomColor];
     ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
 
     if (!(self = [super initWithNode:tableNode])) { return nil; }
@@ -24,8 +23,6 @@
     self.animals = animals;
     
     self.tableNode.dataSource = self;
-    
-//    [self.node addSubnode:self.tableNode];
     
     return self;
 }
@@ -56,11 +53,12 @@
 
 - (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ASCellNode *node = [[ASCellNode alloc] init];
-    node.backgroundColor = [UIColor greenColor];
-    node.preferredFrameSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, 200);
-    
     return ^{
+//        CardNode *node = [[CardNode alloc] initWithAnimal:self.animals[indexPath.row]];
+        CardNode *node = [[CardNode alloc] init];
+        
+        node.preferredFrameSize = [UIScreen mainScreen].bounds.size;
+
         return node;
     };
 }
