@@ -4,7 +4,6 @@
 #import "CardNode.h"
 
 @interface AnimalTableNodeController ()<ASTableDataSource>
-@property (strong, nonatomic) ASTableNode *tableNode;
 @property (strong, nonatomic) NSArray *animals;
 @end
 
@@ -19,7 +18,7 @@
     self.animals = animals;
     
     self.tableNode = tableNode;
-    self.tableNode.dataSource = self;
+//    self.tableNode.dataSource = self;
     
     return self;
 }
@@ -33,9 +32,9 @@
 
 - (void)viewDidLoad
 {
+    //TODO: STILL NOT CALLED
     [super viewDidLoad];
     
-    self.tableNode.view.backgroundColor = [UIColor blackColor];
 }
 
 #pragma mark ASTableNode DataSource
@@ -60,11 +59,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.animals.count;
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
 }
 
 @end
