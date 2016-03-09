@@ -15,12 +15,12 @@
     ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
 
     if (!(self = [super initWithNode:tableNode])) { return nil; }
-    
-    self.tableNode = tableNode;
-    
+
     self.animals = animals;
     
+    self.tableNode = tableNode;
     self.tableNode.dataSource = self;
+    self.tableNode.backgroundColor = [UIColor blackColor];
     
     return self;
 }
@@ -69,6 +69,11 @@
     UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
     
     return color;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 @end
