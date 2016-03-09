@@ -8,5 +8,5 @@
 
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 
-@property (nonatomic, strong) RainforestCardInfo *animalInfo;
+@property (strong, nonatomic) RainforestCardInfo *animalInfo;
 @end

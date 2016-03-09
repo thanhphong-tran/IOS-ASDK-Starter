@@ -7,11 +7,11 @@
 
 @interface CardNode ()<ASNetworkImageNodeDelegate>
 
-@property (nonatomic, strong) ASImageNode *backgroundImageNode;
-@property (nonatomic, strong) ASNetworkImageNode *animalImageNode;
-@property (nonatomic, strong) ASTextNode *animalNameTextNode;
+@property (strong, nonatomic) ASImageNode *backgroundImageNode;
+@property (strong, nonatomic) ASNetworkImageNode *animalImageNode;
+@property (strong, nonatomic) ASTextNode *animalNameTextNode;
 
-@property (nonatomic, strong) ASTextNode *animalDescriptionTextNode;
+@property (strong, nonatomic) ASTextNode *animalDescriptionTextNode;
 
 @end
 

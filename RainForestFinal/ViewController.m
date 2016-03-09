@@ -5,7 +5,7 @@
 #import "RainforestCardInfo.h"
 
 @interface ViewController ()<ASPagerNodeDataSource>
-@property (nonatomic) ASPagerNode *pagerNode;
+@property (strong, nonatomic) ASPagerNode *pagerNode;
 @end
 
 @implementation ViewController
