@@ -26,22 +26,32 @@
     self.animalInfo = animalInfo;
     
     self.backgroundColor = [UIColor lightGrayColor];
+    self.clipsToBounds = YES;
     
     self.backgroundImageNode       = [[ASImageNode alloc] init];
     self.animalImageNode           = [[ASNetworkImageNode alloc] init];
     self.animalNameTextNode        = [[ASTextNode alloc] init];
     self.animalDescriptionTextNode = [[ASTextNode alloc] init];
 
+    //Animal Image
     self.animalImageNode.URL = self.animalInfo.imageURL;
     self.animalImageNode.clipsToBounds = YES;
     self.animalImageNode.delegate = self;
-    
+    self.animalImageNode.placeholderFadeDuration = 0.15;
+    self.animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
+
+    //Animal Name
     self.animalNameTextNode.attributedString = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
-    self.animalDescriptionTextNode.attributedString = [NSAttributedString attributedStringForDescription:self.animalInfo.animalDescription];
     
+    //Animal Description
+    self.animalDescriptionTextNode.attributedString = [NSAttributedString attributedStringForDescription:self.animalInfo.animalDescription];
+    self.animalDescriptionTextNode.truncationAttributedString = [NSAttributedString attributedStringForDescription:@"…"];
+    self.animalDescriptionTextNode.backgroundColor = [UIColor clearColor];
+
+    //Background Image
+    self.backgroundImageNode.placeholderFadeDuration = 0.15;
     self.backgroundImageNode.imageModificationBlock = ^(UIImage *image) {
         UIImage *newImage = [image applyBlurWithRadius:30 tintColor:[UIColor colorWithWhite:0.5 alpha:0.3] saturationDeltaFactor:1.8 maskImage:nil];
-        
         return newImage ? newImage : image;
     };
     
@@ -49,12 +59,6 @@
     [self addSubnode:self.animalImageNode];
     [self addSubnode:self.animalNameTextNode];
     [self addSubnode:self.animalDescriptionTextNode];
-    
-    self.animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
-    
-    self.animalDescriptionTextNode.backgroundColor = [UIColor clearColor];
-    
-    self.clipsToBounds = YES;
     
     return self;
 }

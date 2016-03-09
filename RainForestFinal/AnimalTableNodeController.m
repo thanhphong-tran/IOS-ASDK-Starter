@@ -20,7 +20,6 @@
     
     self.tableNode = tableNode;
     self.tableNode.dataSource = self;
-    self.tableNode.backgroundColor = [UIColor blackColor];
     
     return self;
 }
@@ -36,7 +35,7 @@
 {
     [super viewDidLoad];
     
-    
+    self.tableNode.view.backgroundColor = [UIColor blackColor];
 }
 
 #pragma mark ASTableNode DataSource
@@ -47,8 +46,10 @@
 
 - (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    RainforestCardInfo *animal = self.animals[indexPath.row];
+    
     return ^{
-        CardNode *node = [[CardNode alloc] initWithAnimal:self.animals[indexPath.row]];
+        CardNode *node = [[CardNode alloc] initWithAnimal:animal];
         
         node.preferredFrameSize = [UIScreen mainScreen].bounds.size;
 
