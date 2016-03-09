@@ -4,10 +4,8 @@
 #import "CardNode.h"
 
 @interface AnimalTableNodeController ()<ASTableDataSource>
-@property (nonatomic) ASDisplayNode *theNode;
-
-@property (nonatomic) ASTableNode *tableNode;
-@property (nonatomic) NSArray *animals;
+@property (strong, nonatomic) ASTableNode *tableNode;
+@property (strong, nonatomic) NSArray *animals;
 @end
 
 @implementation AnimalTableNodeController
@@ -31,11 +29,7 @@
 {
     [super viewWillLayoutSubviews];
     
-    CGSize size = [UIScreen mainScreen].bounds.size;
-
-    self.theNode.frame = CGRectMake(0, 0, size.width, size.height);
-
-    self.tableNode.frame = self.node.frame;
+    self.tableNode.frame = [UIScreen mainScreen].bounds;
 }
 
 - (void)viewDidLoad
@@ -54,8 +48,7 @@
 - (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return ^{
-//        CardNode *node = [[CardNode alloc] initWithAnimal:self.animals[indexPath.row]];
-        CardNode *node = [[CardNode alloc] init];
+        CardNode *node = [[CardNode alloc] initWithAnimal:self.animals[indexPath.row]];
         
         node.preferredFrameSize = [UIScreen mainScreen].bounds.size;
 

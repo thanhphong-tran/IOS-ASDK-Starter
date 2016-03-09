@@ -5,5 +5,8 @@
 @class RainforestCardInfo;
 
 @interface CardNode : ASCellNode
+
+- (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
+
 @property (nonatomic, strong) RainforestCardInfo *animalInfo;
 @end

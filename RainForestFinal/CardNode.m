@@ -18,11 +18,13 @@
 
 @implementation CardNode
 
-- (instancetype)init
+- (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 {
     if (!(self = [super init])) {
         return nil;
     }
+    
+    self.animalInfo = animalInfo;
     
     self.backgroundColor = [UIColor lightGrayColor];
     
