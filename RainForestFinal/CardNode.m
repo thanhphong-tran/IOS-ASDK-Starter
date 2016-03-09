@@ -70,9 +70,12 @@
 }
 
 - (CGSize)calculateSizeThatFits:(CGSize)constrainedSize
-{    
+{
+    
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    
     [self.animalNameTextNode measure:constrainedSize];
-    [self.animalDescriptionTextNode measure:constrainedSize];
+    [self.animalDescriptionTextNode measure:CGSizeMake(constrainedSize.width - 32, screenSize.height * (1.0/3.0) - 32)];
     
     return [UIScreen mainScreen].bounds.size;
 }
@@ -82,11 +85,11 @@
     [super layout];
     
     self.animalImageNode.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height * (2.0/3.0));
-
+    
     self.animalNameTextNode.bounds = CGRectMake(0, 0, self.animalNameTextNode.calculatedSize.width, self.animalNameTextNode.calculatedSize.height);
     self.animalNameTextNode.position = CGPointMake(16 + self.animalNameTextNode.calculatedSize.width/2.0, self.animalImageNode.calculatedSize.height + self.animalNameTextNode.calculatedSize.height/2.0 + 8);
     
-    self.animalDescriptionTextNode.frame = CGRectMake(16, self.bounds.size.height * (2.0/3.0) + 16, self.bounds.size.width - 32, self.bounds.size.height * (1.0/3.0) - 32);
+    self.animalDescriptionTextNode.frame = CGRectMake(16, self.bounds.size.height * (2.0/3.0) + 16, self.animalDescriptionTextNode.calculatedSize.width, self.animalDescriptionTextNode.calculatedSize.height);
     self.backgroundImageNode.frame = self.bounds;
 }
 
