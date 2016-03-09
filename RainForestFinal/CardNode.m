@@ -102,4 +102,21 @@
     self.backgroundImageNode.image = image;
 }
 
+- (void)displayWillStart
+{
+    [super displayWillStart];
+    
+}
+
+- (void)displayDidFinish
+{
+    [super displayDidFinish];
+    
+    self.alpha = 0.0;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.alpha = 1.0;
+    }];
+}
+
 @end
