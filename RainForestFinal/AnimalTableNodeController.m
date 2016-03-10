@@ -18,7 +18,7 @@
     self.animals = animals;
     
     self.tableNode = tableNode;
-//    self.tableNode.dataSource = self;
+    self.tableNode.dataSource = self;
     
     return self;
 }

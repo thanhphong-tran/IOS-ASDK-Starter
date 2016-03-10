@@ -1,1 +1,1 @@
-../../../AsyncDisplayKit/Base/ASEqualityHelpers.h
+../../../../../OpenSource/AsyncDisplayKit/Base/ASEqualityHelpers.h

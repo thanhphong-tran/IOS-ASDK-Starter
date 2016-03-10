@@ -17,7 +17,7 @@
 {
     if (!(self = [super init])) { return nil; }
     
-    self.animals = [RainforestCardInfo allAnimals];
+    self.animals = @[[RainforestCardInfo birdCards], [RainforestCardInfo mammalCards], [RainforestCardInfo reptileCards]];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -51,10 +51,10 @@
 {
     CGSize pagerNodeSize = pagerNode.bounds.size;
     __weak ViewController *weakSelf = self;
+    NSArray *animals = self.animals[index];
     
     ASCellNode *node = [[ASCellNode alloc] initWithViewControllerBlock:^UIViewController * _Nonnull{
-        AnimalTableNodeController *tableNodeController = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo allAnimals]];
-        tableNodeController.tableNode.dataSource = weakSelf;
+        AnimalTableNodeController *tableNodeController = [[AnimalTableNodeController alloc] initWithAnimals:animals];
         return tableNodeController;
     } didLoadBlock:nil];
     

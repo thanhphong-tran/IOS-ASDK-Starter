@@ -1,1 +1,1 @@
-../../../AsyncDisplayKit/AsyncDisplayKit/Details/NSMutableAttributedString+TextKitAdditions.h
+../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/NSMutableAttributedString+TextKitAdditions.h

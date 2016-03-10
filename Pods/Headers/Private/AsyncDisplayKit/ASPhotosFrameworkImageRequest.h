@@ -1,1 +1,1 @@
-../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASPhotosFrameworkImageRequest.h
+../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASPhotosFrameworkImageRequest.h

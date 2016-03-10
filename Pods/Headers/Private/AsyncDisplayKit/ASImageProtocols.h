@@ -1,1 +1,1 @@
-../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASImageProtocols.h
+../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASImageProtocols.h

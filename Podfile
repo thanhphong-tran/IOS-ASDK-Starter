@@ -4,6 +4,6 @@
 # use_frameworks!
 
 target 'RainForestFinal' do
-  pod 'AsyncDisplayKit', '1.9.7'
+  pod 'AsyncDisplayKit', path: '../OpenSource/AsyncDisplayKit'
 end
 
