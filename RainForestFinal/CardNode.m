@@ -2,6 +2,7 @@
 #import "CardNode.h"
 #import "Factories.h"
 #import "RainforestCardInfo.h"
+#import "GradientNode.h"
 
 #import "UIImage+ImageEffects.h"
 
@@ -13,15 +14,15 @@
 
 @property (strong, nonatomic) ASTextNode *animalDescriptionTextNode;
 
+@property (strong, nonatomic) GradientNode *gradientNode;
+
 @end
 
 @implementation CardNode
 
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 {
-    if (!(self = [super init])) {
-        return nil;
-    }
+    if (!(self = [super init])) { return nil; }
     
     self.animalInfo = animalInfo;
     
@@ -32,6 +33,7 @@
     self.animalImageNode           = [[ASNetworkImageNode alloc] init];
     self.animalNameTextNode        = [[ASTextNode alloc] init];
     self.animalDescriptionTextNode = [[ASTextNode alloc] init];
+    self.gradientNode              = [[GradientNode alloc] init];
 
     //Animal Image
     self.animalImageNode.URL = self.animalInfo.imageURL;
@@ -55,42 +57,39 @@
         return newImage ? newImage : image;
     };
     
+    //Gradient Node
+    self.gradientNode.layerBacked = YES;
+    self.gradientNode.opaque = NO;
+    
     [self addSubnode:self.backgroundImageNode];
     [self addSubnode:self.animalImageNode];
+    [self addSubnode:self.gradientNode];
+
     [self addSubnode:self.animalNameTextNode];
     [self addSubnode:self.animalDescriptionTextNode];
     
     return self;
 }
 
-- (void)didLoad
+- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
 {
-    [super didLoad];
-    
-}
+    CGFloat ratio = (self.preferredFrameSize.height * (2.0/3.0))/self.preferredFrameSize.width;
+    ASRatioLayoutSpec *imageRatioSpec = [ASRatioLayoutSpec ratioLayoutSpecWithRatio:ratio child:self.animalImageNode];
 
-- (CGSize)calculateSizeThatFits:(CGSize)constrainedSize
-{
-    
-    CGSize screenSize = [UIScreen mainScreen].bounds.size;
-    
-    [self.animalNameTextNode measure:constrainedSize];
-    [self.animalDescriptionTextNode measure:CGSizeMake(constrainedSize.width - 32, screenSize.height * (1.0/3.0) - 32)];
-    
-    return [UIScreen mainScreen].bounds.size;
-}
+    ASOverlayLayoutSpec *gradientOverlaySpec = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:imageRatioSpec overlay:self.gradientNode];
 
-- (void)layout
-{
-    [super layout];
+    ASInsetLayoutSpec *nameInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(0, 16.0, 8.0, 0.0) child:self.animalNameTextNode];
     
-    self.animalImageNode.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height * (2.0/3.0));
+    ASStackLayoutSpec *imageVerticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentEnd alignItems:ASStackLayoutAlignItemsStart children:@[nameInsetSpec]];
     
-    self.animalNameTextNode.bounds = CGRectMake(0, 0, self.animalNameTextNode.calculatedSize.width, self.animalNameTextNode.calculatedSize.height);
-    self.animalNameTextNode.position = CGPointMake(16 + self.animalNameTextNode.calculatedSize.width/2.0, self.animalImageNode.calculatedSize.height + self.animalNameTextNode.calculatedSize.height/2.0 + 8);
+    ASOverlayLayoutSpec *titleOverlaySpec = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:gradientOverlaySpec overlay:imageVerticalStackSpec];
     
-    self.animalDescriptionTextNode.frame = CGRectMake(16, self.bounds.size.height * (2.0/3.0) + 16, self.animalDescriptionTextNode.calculatedSize.width, self.animalDescriptionTextNode.calculatedSize.height);
-    self.backgroundImageNode.frame = self.bounds;
+    ASInsetLayoutSpec *descriptionTextInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0) child:self.animalDescriptionTextNode];
+    self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width, self.preferredFrameSize.height * (1.0/3.0));
+    
+    ASStackLayoutSpec *verticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentStart alignItems:ASStackLayoutAlignItemsStart children:@[titleOverlaySpec, descriptionTextInsetSpec]];
+
+    return [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec background:self.backgroundImageNode];
 }
 
 #pragma mark ASNetworkImageNode Delegate

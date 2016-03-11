@@ -17,6 +17,7 @@
 		AE2FB4BD1C82725A003AD243 /* AnimalTableNodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */; };
 		AE2FB4C61C8FDE4A003AD243 /* CardNode.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4C41C8FDE4A003AD243 /* CardNode.m */; };
 		AE2FB4CC1C907343003AD243 /* RainforestCardInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4CB1C907343003AD243 /* RainforestCardInfo.m */; };
+		AE9911E41C926DE000BF766B /* GradientNode.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9911E31C926DE000BF766B /* GradientNode.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,8 @@
 		AE2FB4C51C8FDE4A003AD243 /* CardNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardNode.h; sourceTree = "<group>"; };
 		AE2FB4CA1C907342003AD243 /* RainforestCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainforestCardInfo.h; sourceTree = "<group>"; };
 		AE2FB4CB1C907343003AD243 /* RainforestCardInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RainforestCardInfo.m; sourceTree = "<group>"; };
+		AE9911E21C926DE000BF766B /* GradientNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientNode.h; sourceTree = "<group>"; };
+		AE9911E31C926DE000BF766B /* GradientNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientNode.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +102,8 @@
 				AE2FB49E1C821D0C003AD243 /* Info.plist */,
 				AE2FB4A41C821FEA003AD243 /* Misc */,
 				AE2FB48D1C821D0C003AD243 /* Supporting Files */,
+				AE9911E21C926DE000BF766B /* GradientNode.h */,
+				AE9911E31C926DE000BF766B /* GradientNode.m */,
 			);
 			path = RainForestFinal;
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE2FB4A71C822006003AD243 /* UIImage+ImageEffects.m in Sources */,
+				AE9911E41C926DE000BF766B /* GradientNode.m in Sources */,
 				AE2FB4951C821D0C003AD243 /* ViewController.m in Sources */,
 				AE2FB4CC1C907343003AD243 /* RainforestCardInfo.m in Sources */,
 				AE2FB4921C821D0C003AD243 /* AppDelegate.m in Sources */,

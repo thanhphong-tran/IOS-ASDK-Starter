@@ -54,20 +54,18 @@ NSString const* REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Pro
     NSDictionary *spectacledCaimanData  = @{@"name": @"Spectacled Caiman", @"imageURL": [NSString stringWithFormat:@"%@/SpectacledCaiman.jpg", REPTILE_BASE_URL], @"animalDescription": @"The spectacled caiman (Caiman crocodilus), also known as the white caiman or common caiman, is a crocodilian reptile found in much of Central and South America.[1] It lives in a range of lowland wetland and riverine habitat types, and can tolerate salt water, as well as fresh; due in part to this adaptability, it is the most common of all crocodilian species."};
     NSDictionary *tRexData = @{@"name": @"T-Rex", @"imageURL": [NSString stringWithFormat:@"%@/TRex.jpg", REPTILE_BASE_URL], @"animalDescription": @"Tyrannosaurus (/tᵻˌrænəˈsɔːrəs/ or /taɪˌrænəˈsɔːrəs/, meaning \"tyrant lizard\", from the Ancient Greek tyrannos (τύραννος), \"tyrant\", and sauros (σαῦρος), \"lizard\"[1]) is a genus of coelurosaurian theropod dinosaur. The species Tyrannosaurus rex (rex meaning \"king\" in Latin), commonly abbreviated to T. rex, is one of the most well-represented of the large theropods. Tyrannosaurus lived throughout what is now western North America, on what was then an island continent known as Laramidia. Tyrannosaurus had a much wider range than other tyrannosaurids. Fossils are found in a variety of rock formations dating to the Maastrichtian age of the upper Cretaceous Period, 68 to 66 million years ago.[2] It was the last known member of the tyrannosaurids,[3] and among the last non-avian dinosaurs to exist before the Cretaceous–Paleogene extinction event."};
     
-    RainforestCardInfo *alligatorInfo     = [[self alloc] initWithDictionary:alligatorData];
-    RainforestCardInfo *beardedDragonInfo = [[self alloc] initWithDictionary:beardedDragonData];
-    RainforestCardInfo *komodoDragonInfo   = [[self alloc] initWithDictionary:komodoDragonData];
-    RainforestCardInfo *spectacledCaimanInfo      = [[self alloc] initWithDictionary:spectacledCaimanData];
-    RainforestCardInfo *tRexInfo = [[self alloc] initWithDictionary:tRexData];
+    RainforestCardInfo *alligatorInfo        = [[self alloc] initWithDictionary:alligatorData];
+    RainforestCardInfo *beardedDragonInfo    = [[self alloc] initWithDictionary:beardedDragonData];
+    RainforestCardInfo *komodoDragonInfo     = [[self alloc] initWithDictionary:komodoDragonData];
+    RainforestCardInfo *spectacledCaimanInfo = [[self alloc] initWithDictionary:spectacledCaimanData];
+    RainforestCardInfo *tRexInfo             = [[self alloc] initWithDictionary:tRexData];
     
-    return @[alligatorInfo, beardedDragonInfo, komodoDragonInfo, spectacledCaimanInfo, tRexInfo];
+    return @[beardedDragonInfo, alligatorInfo, komodoDragonInfo, spectacledCaimanInfo, tRexInfo];
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)animalData
 {
-    if (!(self = [super init])) {
-        return nil;
-    }
+    if (!(self = [super init])) { return nil; }
     
     self.name = animalData[@"name"];
     self.animalDescription = animalData[@"animalDescription"];
