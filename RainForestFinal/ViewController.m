@@ -1,9 +1,10 @@
 
 #import "ViewController.h"
-#import <AsyncDisplayKit/AsyncDisplayKit.h>
 #import "AnimalTableNodeController.h"
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
+
+#import <AsyncDisplayKit/AsyncDisplayKit.h>
 
 @interface ViewController ()<ASPagerNodeDataSource, ASTableDataSource>
 @property (strong, nonatomic) ASPagerNode *pagerNode;
@@ -50,7 +51,6 @@
 - (ASCellNodeBlock)pagerNode:(ASPagerNode *)pagerNode nodeBlockAtIndex:(NSInteger)index
 {
     CGSize pagerNodeSize = pagerNode.bounds.size;
-    __weak ViewController *weakSelf = self;
     NSArray *animals = self.animals[index];
     
     ASCellNode *node = [[ASCellNode alloc] initWithViewControllerBlock:^UIViewController * _Nonnull{
