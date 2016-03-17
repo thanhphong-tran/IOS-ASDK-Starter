@@ -98,9 +98,6 @@
 @import Accelerate;
 #import <float.h>
 
-#import <AsyncDisplayKit/AsyncDisplayKit.h>
-
-
 @implementation UIImage (ImageEffects)
 
 - (UIImage *)applyBlurWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage {

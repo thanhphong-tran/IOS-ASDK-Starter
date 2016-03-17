@@ -76,7 +76,7 @@
     
     [self.animalNameLabel sizeToFit];
     CGSize nameLabelSize = self.animalNameLabel.bounds.size;
-    self.animalNameLabel.center = CGPointMake(16 + nameLabelSize.width/2.0, nameLabelSize.height/2.0 + 8);
+    self.animalNameLabel.center = CGPointMake(16 + nameLabelSize.width/2.0, size.height * (2.0/3.0) - nameLabelSize.height/2.0 - 8);
     
     self.animalDescriptionTextView.frame = CGRectMake(8, size.height * (2.0/3.0) + 8, size.width - 16, size.height * (1.0/3.0) - 16);
     self.backgroundImageView.frame = self.bounds;

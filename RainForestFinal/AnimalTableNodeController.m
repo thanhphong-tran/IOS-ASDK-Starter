@@ -3,10 +3,12 @@
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
 
+#import <ASDisplayKit/ASDisplayKit.h>
+
 static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 @interface AnimalTableNodeController ()<UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) astable *tableView;
 @property (nonatomic, strong) NSArray *animals;
 @end
 
