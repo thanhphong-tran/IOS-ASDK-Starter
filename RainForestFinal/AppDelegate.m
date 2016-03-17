@@ -18,7 +18,6 @@
     _window = [[UIWindow alloc] initWithFrame:windowRect];
     
     ViewController *vc = [[ViewController alloc] init];
-//    AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo allAnimals]];
     [_window setRootViewController:vc];
     
     [_window makeKeyAndVisible];

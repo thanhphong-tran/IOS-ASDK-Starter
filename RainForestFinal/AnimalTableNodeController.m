@@ -32,7 +32,6 @@
 
 - (void)viewDidLoad
 {
-    //TODO: STILL NOT CALLED
     [super viewDidLoad];
     
 }
