@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '673E2A7630F9C53793F94DA3'
+               BlueprintIdentifier = '39ABBA5FB451AAF5E566E902'
                BlueprintName = 'Pods-RainForestFinal'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libPods-RainForestFinal.a'>
