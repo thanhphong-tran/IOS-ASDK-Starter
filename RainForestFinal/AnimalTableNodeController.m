@@ -2,6 +2,7 @@
 #import "AnimalTableNodeController.h"
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
+#import "CardCell.h"
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
@@ -28,7 +29,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
     [super viewDidLoad];
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    [self.tableView registerClass:[CardNode class] forCellReuseIdentifier:kCellReuseIdentifier];
+    [self.tableView registerClass:[CardCell class] forCellReuseIdentifier:kCellReuseIdentifier];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -51,7 +52,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CardNode *cell = [self.tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifier];
+    CardCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifier];
     
     cell.backgroundColor = [UIColor lightGrayColor];
     cell.animalInfo = self.animals[indexPath.row];

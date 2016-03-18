@@ -2,84 +2,127 @@
 #import "CardNode.h"
 #import "Factories.h"
 #import "RainforestCardInfo.h"
+#import "GradientNode.h"
 
 #import "UIImage+ImageEffects.h"
 
-#import <AFNetworking/UIImageView+AFNetworking.h>
+@interface CardNode ()<ASNetworkImageNodeDelegate>
 
-@interface CardNode ()
+@property (strong, nonatomic) ASImageNode *backgroundImageNode;
+@property (strong, nonatomic) ASNetworkImageNode *animalImageNode;
+@property (strong, nonatomic) ASTextNode *animalNameTextNode;
 
-@property (nonatomic, strong) UIImageView *backgroundImageView;
-@property (nonatomic, strong) UIImageView *animalImageView;
-@property (nonatomic, strong) UILabel *animalNameLabel;
+@property (strong, nonatomic) ASTextNode *animalDescriptionTextNode;
 
-@property (nonatomic, strong) UITextView *animalDescriptionTextView;
+@property (strong, nonatomic) GradientNode *gradientNode;
 
 @end
 
 @implementation CardNode
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 {
-    if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
-        return nil;
-    }
+    if (!(self = [super init])) { return nil; }
     
-    self.backgroundImageView = [[UIImageView alloc] init];
-    self.animalImageView = [[UIImageView alloc] init];
-    self.animalNameLabel = [[UILabel alloc] init];
-    self.animalDescriptionTextView = [[UITextView alloc] init];
+    self.animalInfo = animalInfo;
     
-    [self addSubview:self.backgroundImageView];
-    [self addSubview:self.animalImageView];
-    [self addSubview:self.animalNameLabel];
-    [self addSubview:self.animalDescriptionTextView];
-    
-    self.animalImageView.contentMode = UIViewContentModeScaleAspectFill;
-    
-    self.animalDescriptionTextView.scrollEnabled = NO;
-    self.animalDescriptionTextView.backgroundColor = [UIColor clearColor];
-    
+    self.backgroundColor = [UIColor lightGrayColor];
     self.clipsToBounds = YES;
+    
+    self.backgroundImageNode       = [[ASImageNode alloc] init];
+    self.animalImageNode           = [[ASNetworkImageNode alloc] init];
+    self.animalNameTextNode        = [[ASTextNode alloc] init];
+    self.animalDescriptionTextNode = [[ASTextNode alloc] init];
+    self.gradientNode              = [[GradientNode alloc] init];
+
+    //Animal Image
+    self.animalImageNode.URL = self.animalInfo.imageURL;
+    self.animalImageNode.clipsToBounds = YES;
+    self.animalImageNode.delegate = self;
+    self.animalImageNode.placeholderFadeDuration = 0.15;
+    self.animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
+
+    //Animal Name
+    self.animalNameTextNode.attributedString = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
+    
+    //Animal Description
+    self.animalDescriptionTextNode.attributedString = [NSAttributedString attributedStringForDescription:self.animalInfo.animalDescription];
+    self.animalDescriptionTextNode.truncationAttributedString = [NSAttributedString attributedStringForDescription:@"…"];
+    self.animalDescriptionTextNode.backgroundColor = [UIColor clearColor];
+
+    //Background Image
+    self.backgroundImageNode.placeholderFadeDuration = 0.15;
+    self.backgroundImageNode.imageModificationBlock = ^(UIImage *image) {
+        UIImage *newImage = [image applyBlurWithRadius:30 tintColor:[UIColor colorWithWhite:0.5 alpha:0.3] saturationDeltaFactor:1.8 maskImage:nil];
+        return newImage ? newImage : image;
+    };
+    
+    //Gradient Node
+    self.gradientNode.layerBacked = YES;
+    self.gradientNode.opaque = NO;
+    
+    [self addSubnode:self.backgroundImageNode];
+    [self addSubnode:self.animalImageNode];
+    [self addSubnode:self.gradientNode];
+
+    [self addSubnode:self.animalNameTextNode];
+    [self addSubnode:self.animalDescriptionTextNode];
     
     return self;
 }
 
-- (void)prepareForReuse
+- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
 {
-    [super prepareForReuse];
+    self.preferredFrameSize = [UIScreen mainScreen].bounds.size;
+
+    CGFloat ratio = (self.preferredFrameSize.height * (2.0/3.0))/self.preferredFrameSize.width;
+    ASRatioLayoutSpec *imageRatioSpec = [ASRatioLayoutSpec ratioLayoutSpecWithRatio:ratio child:self.animalImageNode];
+
+    ASOverlayLayoutSpec *gradientOverlaySpec = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:imageRatioSpec overlay:self.gradientNode];
+
+    ASInsetLayoutSpec *nameInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(0, 16.0, 8.0, 0.0) child:self.animalNameTextNode];
     
-    self.animalImageView.image = nil;
-    self.backgroundImageView.image = nil;
+    ASStackLayoutSpec *imageVerticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentEnd alignItems:ASStackLayoutAlignItemsStart children:@[nameInsetSpec]];
+    
+    ASOverlayLayoutSpec *titleOverlaySpec = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:gradientOverlaySpec overlay:imageVerticalStackSpec];
+    
+    ASInsetLayoutSpec *descriptionTextInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0) child:self.animalDescriptionTextNode];
+    self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width, self.preferredFrameSize.height * (1.0/3.0));
+    
+    ASStackLayoutSpec *verticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentStart alignItems:ASStackLayoutAlignItemsStart children:@[titleOverlaySpec, descriptionTextInsetSpec]];
+
+    ASBackgroundLayoutSpec *backgroundLayoutSpec = [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec background:self.backgroundImageNode];
+    
+    return backgroundLayoutSpec;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    CGSize size = self.bounds.size;
-    
-    self.animalImageView.frame = CGRectMake(0, 0, size.width, size.height * (2.0/3.0));
-    self.animalImageView.clipsToBounds = YES;
-    
-    __weak CardNode *weakSelf = self;
-    [self.animalImageView setImageWithURLRequest:[NSURLRequest requestWithURL:self.animalInfo.imageURL] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-        weakSelf.animalImageView.image = image;
+#pragma mark ASNetworkImageNode Delegate
 
-        weakSelf.backgroundImageView.image = [image applyBlurWithRadius:30 tintColor:[UIColor colorWithWhite:0.5 alpha:0.3] saturationDeltaFactor:1.8 maskImage:nil];
-    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-        
+- (void)imageNode:(ASNetworkImageNode *)imageNode didFailWithError:(NSError *)error
+{
+    NSLog(@"Image failed to load with error: \n%@", error);
+}
+
+- (void)imageNode:(ASNetworkImageNode *)imageNode didLoadImage:(UIImage *)image
+{
+    self.backgroundImageNode.image = image;
+}
+
+- (void)displayWillStart
+{
+    [super displayWillStart];
+    
+}
+
+- (void)displayDidFinish
+{
+    [super displayDidFinish];
+    
+    self.alpha = 0.0;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.alpha = 1.0;
     }];
-    
-    self.animalNameLabel.attributedText = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
-    self.animalDescriptionTextView.attributedText = [NSAttributedString attributedStringForDescription:self.animalInfo.animalDescription];
-    
-    [self.animalNameLabel sizeToFit];
-    CGSize nameLabelSize = self.animalNameLabel.bounds.size;
-    self.animalNameLabel.center = CGPointMake(16 + nameLabelSize.width/2.0, size.height * (2.0/3.0) - nameLabelSize.height/2.0 - 8);
-    
-    self.animalDescriptionTextView.frame = CGRectMake(8, size.height * (2.0/3.0) + 8, size.width - 16, size.height * (1.0/3.0) - 16);
-    self.backgroundImageView.frame = self.bounds;
 }
 
 @end
