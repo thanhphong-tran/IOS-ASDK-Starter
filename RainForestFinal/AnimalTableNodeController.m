@@ -33,7 +33,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    self.view.backgroundColor = [UIColor blackColor];
 }
 
 #pragma mark ASTableNode DataSource

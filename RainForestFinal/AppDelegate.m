@@ -10,7 +10,6 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     CGRect windowRect = [[UIScreen mainScreen] bounds];
