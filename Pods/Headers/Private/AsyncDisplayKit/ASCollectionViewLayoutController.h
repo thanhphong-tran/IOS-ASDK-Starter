@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASCollectionViewLayoutController.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASCollectionViewLayoutController.h

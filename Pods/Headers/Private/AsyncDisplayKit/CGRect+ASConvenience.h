@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/CGRect+ASConvenience.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/CGRect+ASConvenience.h

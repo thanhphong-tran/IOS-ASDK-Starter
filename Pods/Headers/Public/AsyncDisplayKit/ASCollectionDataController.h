@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASCollectionDataController.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASCollectionDataController.h

@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASBasicImageDownloader.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASBasicImageDownloader.h

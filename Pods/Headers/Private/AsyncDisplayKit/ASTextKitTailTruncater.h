@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextKitTailTruncater.h
+../../../AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextKitTailTruncater.h

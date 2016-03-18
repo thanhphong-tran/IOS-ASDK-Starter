@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/TextKit/ASEqualityHashHelpers.h
+../../../AsyncDisplayKit/AsyncDisplayKit/TextKit/ASEqualityHashHelpers.h

@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASPINRemoteImageDownloader.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASPINRemoteImageDownloader.h

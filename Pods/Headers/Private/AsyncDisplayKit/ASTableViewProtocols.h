@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/ASTableViewProtocols.h
+../../../AsyncDisplayKit/AsyncDisplayKit/ASTableViewProtocols.h

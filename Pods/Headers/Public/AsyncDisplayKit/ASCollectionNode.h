@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/ASCollectionNode.h
+../../../AsyncDisplayKit/AsyncDisplayKit/ASCollectionNode.h

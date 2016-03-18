@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextNodeWordKerner.h
+../../../AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextNodeWordKerner.h

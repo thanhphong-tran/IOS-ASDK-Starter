@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/ASTextNode+Beta.h
+../../../AsyncDisplayKit/AsyncDisplayKit/ASTextNode+Beta.h

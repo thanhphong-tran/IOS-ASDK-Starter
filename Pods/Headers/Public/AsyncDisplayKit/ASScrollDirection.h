@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASScrollDirection.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASScrollDirection.h

@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/Details/ASCollectionViewFlowLayoutInspector.h
+../../../AsyncDisplayKit/AsyncDisplayKit/Details/ASCollectionViewFlowLayoutInspector.h

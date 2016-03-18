@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextKitRenderer+TextChecking.h
+../../../AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextKitRenderer+TextChecking.h

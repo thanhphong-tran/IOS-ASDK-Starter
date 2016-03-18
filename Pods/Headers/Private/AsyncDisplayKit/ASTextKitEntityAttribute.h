@@ -1,1 +1,1 @@
-../../../../../OpenSource/AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextKitEntityAttribute.h
+../../../AsyncDisplayKit/AsyncDisplayKit/TextKit/ASTextKitEntityAttribute.h
