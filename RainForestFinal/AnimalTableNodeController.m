@@ -3,13 +3,13 @@
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
 
-@interface AnimalTableNodeController ()<ASTableDataSource>
-@property (strong, nonatomic) NSArray *animals;
+@interface AnimalTableNodeController ()<ASTableDataSource, ASTableDelegate>
+@property (strong, nonatomic) NSMutableArray *animals;
 @end
 
 @implementation AnimalTableNodeController
 
-- (instancetype)initWithAnimals:(NSArray *)animals
+- (instancetype)initWithAnimals:(NSMutableArray *)animals
 {
     ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
 
@@ -19,6 +19,9 @@
     
     self.tableNode = tableNode;
     self.tableNode.dataSource = self;
+    self.tableNode.delegate = self;
+    
+    self.tableNode.view.leadingScreensForBatching = 1.0;  // overriding default of 2.0
     
     return self;
 }
@@ -35,6 +38,21 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor blackColor];
+}
+
+#pragma mark ASTableNode Delegate
+- (void)tableView:(ASTableView *)tableView willBeginBatchFetchWithContext:(ASBatchContext *)context
+{
+    [self nextPageWithCompletion:^(NSArray *animals) {
+        [self insertNewRowsInTableView:animals];
+        
+        [context completeBatchFetching:YES];
+    }];
+}
+
+- (BOOL)shouldBatchFetchForTableView:(ASTableView *)tableView
+{
+    return YES;
 }
 
 #pragma mark ASTableNode DataSource
@@ -59,6 +77,32 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.animals.count;
+}
+
+#pragma mark Helpers
+- (void)nextPageWithCompletion:(void (^)(NSArray *))block
+{
+    NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
+    
+    //it's important that this block is run on the main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        block(moreAnimals);
+    });
+}
+
+- (void)insertNewRowsInTableView:(NSArray *)newAnimals
+{
+    NSInteger section = 0;
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    
+    NSUInteger newTotalNumberOfPhotos = self.animals.count + newAnimals.count;
+    for (NSUInteger row = self.animals.count; row < newTotalNumberOfPhotos; row++) {
+        NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
+        [indexPaths addObject:path];
+    }
+    
+    [self.animals addObjectsFromArray:newAnimals];
+    [self.tableNode.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end

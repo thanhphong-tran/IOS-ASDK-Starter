@@ -9,7 +9,7 @@
 @interface ViewController ()<ASPagerNodeDataSource, ASTableDataSource>
 @property (strong, nonatomic) ASPagerNode *pagerNode;
 
-@property (strong, nonatomic) NSArray *animals;
+@property (strong, nonatomic) NSArray<NSMutableArray *> *animals;
 @end
 
 @implementation ViewController
@@ -18,7 +18,7 @@
 {
     if (!(self = [super init])) { return nil; }
     
-    self.animals = @[[RainforestCardInfo birdCards], [RainforestCardInfo mammalCards], [RainforestCardInfo reptileCards]];
+    self.animals = @[[RainforestCardInfo birdCards].mutableCopy, [RainforestCardInfo mammalCards].mutableCopy, [RainforestCardInfo reptileCards].mutableCopy];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
