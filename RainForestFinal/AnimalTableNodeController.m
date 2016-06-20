@@ -4,13 +4,11 @@
 #import "CardNode.h"
 #import "CardCell.h"
 
-#import <AsyncDisplayKit/AsyncDisplayKit.h>
-
 static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 @interface AnimalTableNodeController ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *animals;
+@property (nonatomic, strong) NSMutableArray *animals;
 @end
 
 @implementation AnimalTableNodeController
@@ -19,7 +17,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 {
     if (!(self = [super init])) { return nil; }
     
-    self.animals = animals;
+    self.animals = animals.mutableCopy;
     
     return self;
 }
@@ -70,9 +68,41 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
     return self.view.bounds.size.height;
 }
 
+#pragma mark ASTableNode Delegate
+
+
+
+#pragma mark Helpers
+
+//- (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block
+//{
+//    NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
+//    
+//    //it's important that this block is run on the main thread
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        block(moreAnimals);
+//    });
+//}
+//
+//- (void)insertNewRowsInTableView:(NSArray *)newAnimals
+//{
+//    NSInteger section = 0;
+//    NSMutableArray *indexPaths = [NSMutableArray array];
+//    
+//    NSUInteger newTotalNumberOfPhotos = self.animals.count + newAnimals.count;
+//    for (NSUInteger row = self.animals.count; row < newTotalNumberOfPhotos; row++) {
+//        NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
+//        [indexPaths addObject:path];
+//    }
+//    
+//    [self.animals addObjectsFromArray:newAnimals];
+//    [self.tableNode.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+//}
+
 - (BOOL)prefersStatusBarHidden
 {
     return YES;
 }
 
 @end
+

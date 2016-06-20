@@ -22,14 +22,14 @@
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    
     self.pagerNode = [[ASPagerNode alloc] init];
-    self.pagerNode.backgroundColor = [UIColor blackColor];
     
     [self.pagerNode setDataSource:self];
     
     [self.view addSubnode:self.pagerNode];
+
     
+    self.pagerNode.backgroundColor = [UIColor blackColor];
     return self;
 }
 
