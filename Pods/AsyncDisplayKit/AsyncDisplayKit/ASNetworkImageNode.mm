@@ -166,6 +166,8 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
   return _delegate;
 }
 
+#pragma mark ASInterfaceState Hooks
+
 /* displayWillStart in ASMultiplexImageNode has a very similar implementation. Changes here are likely necessary
  in ASMultiplexImageNode as well. */
 - (void)displayWillStart
@@ -191,6 +193,31 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
       [_downloader setPriority:ASImageDownloaderPriorityImminent withDownloadIdentifier:_downloadIdentifier];
     }
   }
+}
+
+- (void)fetchData
+{
+    [super fetchData];
+    
+    {
+        ASDN::MutexLocker l(_lock);
+        [self _lazilyLoadImageIfNecessary];
+    }
+}
+
+- (void)clearFetchedData
+{
+    [super clearFetchedData];
+    
+    {
+        ASDN::MutexLocker l(_lock);
+        
+        [self _cancelImageDownload];
+        [self _clearImage];
+        if (_cacheSupportsClearing) {
+            [_cache clearFetchedImageFromCacheWithURL:_URL];
+        }
+    }
 }
 
 /* visibilityDidChange in ASMultiplexImageNode has a very similar implementation. Changes here are likely necessary
@@ -234,31 +261,6 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
       }
       [_downloader setProgressImageBlock:progress callbackQueue:dispatch_get_main_queue() withDownloadIdentifier:_downloadIdentifier];
     }
-  }
-}
-
-- (void)clearFetchedData
-{
-  [super clearFetchedData];
-
-  {
-    ASDN::MutexLocker l(_lock);
-
-    [self _cancelImageDownload];
-    [self _clearImage];
-    if (_cacheSupportsClearing) {
-      [_cache clearFetchedImageFromCacheWithURL:_URL];
-    }
-  }
-}
-
-- (void)fetchData
-{
-  [super fetchData];
-  
-  {
-    ASDN::MutexLocker l(_lock);
-    [self _lazilyLoadImageIfNecessary];
   }
 }
 

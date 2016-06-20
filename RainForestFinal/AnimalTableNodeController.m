@@ -3,6 +3,8 @@
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
 
+#import <AsyncDisplayKit/AsyncDisplayKit.h>
+
 @interface AnimalTableNodeController ()<ASTableDataSource, ASTableDelegate>
 @property (strong, nonatomic) NSMutableArray *animals;
 @end
@@ -43,9 +45,12 @@
 #pragma mark ASTableNode Delegate
 - (void)tableView:(ASTableView *)tableView willBeginBatchFetchWithContext:(ASBatchContext *)context
 {
+    //1
     [self nextPageWithCompletion:^(NSArray *animals) {
+        //2
         [self insertNewRowsInTableView:animals];
         
+        //3
         [context completeBatchFetching:YES];
     }];
 }
@@ -69,6 +74,7 @@
         CardNode *node = [[CardNode alloc] initWithAnimal:animal];
         
         node.preferredFrameSize = [UIScreen mainScreen].bounds.size;
+        node.name = [NSString stringWithFormat:@"cell %ld", (long)indexPath.row];
 
         return node;
     };

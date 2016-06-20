@@ -24,6 +24,8 @@
 {
     if (!(self = [super init])) { return nil; }
     
+    self.animalImageNode.URL = [NSURL URLWithString:@"https://someurl.com/image_uri"];
+    
     self.animalInfo = animalInfo;
     
     self.backgroundColor = [UIColor lightGrayColor];
@@ -87,7 +89,17 @@
     ASInsetLayoutSpec *descriptionTextInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0) child:self.animalDescriptionTextNode];
     self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width, self.preferredFrameSize.height * (1.0/3.0));
     
-    ASStackLayoutSpec *verticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentStart alignItems:ASStackLayoutAlignItemsStart children:@[titleOverlaySpec, descriptionTextInsetSpec]];
+    CGFloat height = [UIScreen mainScreen].bounds.size.height/3.0;
+    ASStaticLayoutSpec *staticLayoutSpec = [ASStaticLayoutSpec staticLayoutSpecWithChildren:@[descriptionTextInsetSpec]];
+    descriptionTextInsetSpec.sizeRange = ASRelativeSizeRangeMake(
+                                                ASRelativeSizeMake(
+                                                        ASRelativeDimensionMake(ASRelativeDimensionTypePercent, 1.0),
+                                                        ASRelativeDimensionMake(ASRelativeDimensionTypePoints, height)),
+                                                ASRelativeSizeMake(
+                                                        ASRelativeDimensionMake(ASRelativeDimensionTypePercent, 1.0),
+                                                        ASRelativeDimensionMake(ASRelativeDimensionTypePoints, height)));
+    
+    ASStackLayoutSpec *verticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentStart alignItems:ASStackLayoutAlignItemsStart children:@[titleOverlaySpec, staticLayoutSpec]];
 
     ASBackgroundLayoutSpec *backgroundLayoutSpec = [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec background:self.backgroundImageNode];
     
@@ -106,21 +118,48 @@
     self.backgroundImageNode.image = image;
 }
 
+#pragma mark Interface Callbacks
+#pragma mark -- Fetch Data
+- (void)fetchData
+{
+    [super fetchData];
+ 
+    NSLog(@"%@ is fetching data", self.name);
+}
+
+- (void)clearFetchedData
+{
+    [super clearFetchedData];
+    
+    NSLog(@"%@ is clearing its fetched data", self.name);
+
+}
+
+#pragma mark -- Display
 - (void)displayWillStart
 {
     [super displayWillStart];
     
+    NSLog(@"%@ starting Display", self.name);
 }
 
 - (void)displayDidFinish
 {
     [super displayDidFinish];
+
+    NSLog(@"%@ finished Display", self.name);
+}
+
+#pragma mark -- Visible
+- (void)visibilityDidChange:(BOOL)isVisible
+{
+    [super visibilityDidChange:isVisible];
     
-    self.alpha = 0.0;
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        self.alpha = 1.0;
-    }];
+    if (isVisible) {
+        NSLog(@"%@ became visible", self.name);
+    } else {
+        NSLog(@"%@ left screen", self.name);
+    }
 }
 
 @end
