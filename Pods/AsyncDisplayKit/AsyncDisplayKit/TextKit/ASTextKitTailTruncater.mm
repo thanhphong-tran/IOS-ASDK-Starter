@@ -20,7 +20,6 @@
   NSCharacterSet *_avoidTailTruncationSet;
 }
 @synthesize visibleRanges = _visibleRanges;
-@synthesize truncationStringRect = _truncationStringRect;
 
 - (instancetype)initWithContext:(ASTextKitContext *)context
      truncationAttributedString:(NSAttributedString *)truncationAttributedString
@@ -30,8 +29,6 @@
     _context = context;
     _truncationAttributedString = truncationAttributedString;
     _avoidTailTruncationSet = avoidTailTruncationSet;
-
-    [self _truncate];
   }
   return self;
 }
@@ -62,7 +59,7 @@
   
   // We assume LTR so long as the writing direction is not
   BOOL rtlWritingDirection = paragraphStyle ? paragraphStyle.baseWritingDirection == NSWritingDirectionRightToLeft : NO;
-  // We only want to treat the trunction rect as left-aligned in the case that we are right-aligned and our writing
+  // We only want to treat the truncation rect as left-aligned in the case that we are right-aligned and our writing
   // direction is RTL.
   BOOL leftAligned = CGRectGetMinX(lastLineRect) == CGRectGetMinX(lastLineUsedRect) || !rtlWritingDirection;
 
@@ -153,7 +150,7 @@
   }
 }
 
-- (void)_truncate
+- (void)truncate
 {
   [_context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
     NSUInteger originalStringLength = textStorage.length;
@@ -185,6 +182,16 @@
 
     _visibleRanges = { visibleCharacterRange };
   }];
+}
+
+- (NSRange)firstVisibleRange
+{
+  std::vector<NSRange> visibleRanges = _visibleRanges;
+  if (visibleRanges.size() > 0) {
+    return visibleRanges[0];
+  }
+
+  return NSMakeRange(NSNotFound, 0);
 }
 
 @end

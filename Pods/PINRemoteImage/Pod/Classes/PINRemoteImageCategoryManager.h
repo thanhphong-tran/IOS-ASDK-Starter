@@ -6,9 +6,9 @@
 //
 //
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if PIN_TARGET_IOS
 #import <UIKit/UIKit.h>
-#else
+#elif PIN_TARGET_MAC
 #import <Cocoa/Cocoa.h>
 #endif
 
@@ -217,16 +217,11 @@
 
 //Handle
 - (void)pin_setPlaceholderWithImage:(nullable PINImage *)image;
-- (void)pin_updateUIWithImage:(nullable PINImage *)image animatedImage:(nullable FLAnimatedImage *)animatedImage;
+- (void)pin_updateUIWithRemoteImageManagerResult:(nonnull PINRemoteImageManagerResult *)result;
 - (void)pin_clearImages;
 - (BOOL)pin_ignoreGIFs;
 
 @optional
-
-/**
- If you implement this method, it is called instead of pin_updateUIWithImage:animatedImage:
- */
-- (void)pin_updateUIWithRemoteImageManagerResult:(nonnull PINRemoteImageManagerResult *)result;
 
 - (PINRemoteImageManagerDownloadOptions)pin_defaultOptions;
 

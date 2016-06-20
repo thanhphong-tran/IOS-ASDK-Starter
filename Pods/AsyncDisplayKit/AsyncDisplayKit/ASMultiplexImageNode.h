@@ -55,7 +55,7 @@ typedef NS_ENUM(NSUInteger, ASMultiplexImageNodeErrorCode) {
  * @abstract ASMultiplexImageNode is an image node that can load and display multiple versions of an image.  For
  * example, it can display a low-resolution version of an image while the high-resolution version is loading.
  *
- * @discussion ASMultiplexImageNode begins loading images when its <esource can either return a UIImage directly, or a URL the image node should load.
+ * @discussion ASMultiplexImageNode begins loading images when its resource can either return a UIImage directly, or a URL the image node should load.
  */
 @interface ASMultiplexImageNode : ASImageNode
 
@@ -99,7 +99,7 @@ typedef NS_ENUM(NSUInteger, ASMultiplexImageNodeErrorCode) {
 @property (nonatomic, readwrite, copy) NSArray<ASImageIdentifier> *imageIdentifiers;
 
 /**
- * @abstract Notify the receiver SSAAthat its data source has new UIImages or NSURLs available for <imageIdentifiers>.
+ * @abstract Notify the receiver SSAA that its data source has new UIImages or NSURLs available for <imageIdentifiers>.
  *
  * @discussion If a higher-quality image than is currently displayed is now available, it will be loaded.
  */
@@ -117,13 +117,20 @@ typedef NS_ENUM(NSUInteger, ASMultiplexImageNodeErrorCode) {
  */
 @property (nullable, nonatomic, readonly) ASImageIdentifier displayedImageIdentifier;
 
+/**
+ * @abstract If the downloader implements progressive image rendering and this value is YES progressive renders of the
+ * image will be displayed as the image downloads. Regardless of this properties value, progress renders will
+ * only occur when the node is visible. Defaults to YES.
+ */
+@property (nonatomic, assign, readwrite) BOOL shouldRenderProgressImages;
+
 #if TARGET_OS_IOS
 /**
  * @abstract The image manager that this image node should use when requesting images from the Photos framework. If this is `nil` (the default), then `PHImageManager.defaultManager` is used.
  
  * @see `+[NSURL URLWithAssetLocalIdentifier:targetSize:contentMode:options:]` below.
  */
-@property (nonatomic, strong) PHImageManager *imageManager;
+@property (nullable, nonatomic, strong) PHImageManager *imageManager;
 #endif
 @end
 

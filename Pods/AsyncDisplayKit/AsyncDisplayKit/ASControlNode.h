@@ -30,6 +30,9 @@ typedef NS_OPTIONS(NSUInteger, ASControlNodeEvent)
   ASControlNodeEventTouchUpOutside    = 1 << 5,
   /** A system event canceling the current touches for the control node. */
   ASControlNodeEventTouchCancel       = 1 << 6,
+  /** A system event when the Play/Pause button on the Apple TV remote is pressed. */
+  ASControlNodeEventPrimaryActionTriggered = 1 << 13,
+    
   /** All events, including system events. */
   ASControlNodeEventAllEvents         = 0xFFFFFFFF
 };
@@ -38,7 +41,7 @@ typedef NS_OPTIONS(NSUInteger, ASControlState) {
     ASControlStateNormal       = 0,
     ASControlStateHighlighted  = 1 << 0,                  // used when ASControlNode isHighlighted is set
     ASControlStateDisabled     = 1 << 1,
-    ASControlStateSelected     = 1 << 2,                  // used when ASControlNode isSeleted is set
+    ASControlStateSelected     = 1 << 2,                  // used when ASControlNode isSelected is set
     ASControlStateReserved     = 0xFF000000               // flags reserved for internal framework use
 };
 
@@ -119,7 +122,12 @@ typedef NS_OPTIONS(NSUInteger, ASControlState) {
   @param event The event which triggered these control actions. May be nil.
  */
 - (void)sendActionsForControlEvents:(ASControlNodeEvent)controlEvents withEvent:(nullable UIEvent *)event;
-
+#if TARGET_OS_TV
+/**
+ @abstract How the node looks when it isn't focused. Exposed here so that subclasses can override.
+ */
+- (void)setDefaultFocusAppearance;
+#endif
 @end
 
 NS_ASSUME_NONNULL_END

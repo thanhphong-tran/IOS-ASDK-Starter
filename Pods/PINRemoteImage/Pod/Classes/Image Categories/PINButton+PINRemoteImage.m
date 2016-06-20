@@ -92,21 +92,21 @@
 
 - (void)pin_setPlaceholderWithImage:(PINImage *)image
 {
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if PIN_TARGET_IOS
     [self setImage:image forState:UIControlStateNormal];
-#else
+#elif PIN_TARGET_MAC
     [self setImage:image];
 #endif
 }
 
-- (void)pin_updateUIWithImage:(PINImage *)image animatedImage:(FLAnimatedImage *)animatedImage
+- (void)pin_updateUIWithRemoteImageManagerResult:(PINRemoteImageManagerResult *)result
 {
-    if (image) {
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-        [self setImage:image forState:UIControlStateNormal];
+    if (result.image) {
+#if PIN_TARGET_IOS
+        [self setImage:result.image forState:UIControlStateNormal];
         [self setNeedsLayout];
-#else
-        [self setImage:image];
+#elif PIN_TARGET_MAC
+        [self setImage:result.image];
         [self setNeedsLayout:YES];
 #endif
     }
@@ -114,10 +114,10 @@
 
 - (void)pin_clearImages
 {
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if PIN_TARGET_IOS
     [self setImage:nil forState:UIControlStateNormal];
     [self setNeedsLayout];
-#else
+#elif PIN_TARGET_MAC
     [self setImage:nil];
     [self setNeedsLayout:YES];
 #endif

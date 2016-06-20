@@ -8,20 +8,22 @@
 
 #import <AsyncDisplayKit/ASDisplayNode.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString * const ASTransitionContextFromLayoutKey;
 extern NSString * const ASTransitionContextToLayoutKey;
 
 @protocol ASContextTransitioning <NSObject>
 
 /**
- @abstreact Defines if the given transition is animated
+ @abstract Defines if the given transition is animated
  */
 - (BOOL)isAnimated;
 
 /**
  * @abstract Retrieve either the "from" or "to" layout
  */
-- (ASLayout *)layoutForKey:(NSString *)key;
+- (nullable ASLayout *)layoutForKey:(NSString *)key;
 
 /**
  * @abstract Retrieve either the "from" or "to" constrainedSize
@@ -62,3 +64,5 @@ extern NSString * const ASTransitionContextToLayoutKey;
 - (void)completeTransition:(BOOL)didComplete;
 
 @end
+
+NS_ASSUME_NONNULL_END

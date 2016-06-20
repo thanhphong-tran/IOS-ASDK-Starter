@@ -54,8 +54,8 @@ extern NSInteger const ASDefaultTransactionPriority;
  @param callbackQueue The dispatch queue that the completion blocks will be called on.
  @param completionBlock A block that is called when the transaction is completed. May be NULL.
  */
-- (id)initWithCallbackQueue:(dispatch_queue_t)callbackQueue
-            completionBlock:(asyncdisplaykit_async_transaction_completion_block_t)completionBlock;
+- (instancetype)initWithCallbackQueue:(dispatch_queue_t)callbackQueue
+                      completionBlock:(asyncdisplaykit_async_transaction_completion_block_t)completionBlock;
 
 /**
  @summary Block the main thread until the transaction is complete, including callbacks.
@@ -167,7 +167,7 @@ extern NSInteger const ASDefaultTransactionPriority;
 /**
  @summary Cancels all operations in the transaction.
 
- @desc You can only cancel a commmitted transaction.
+ @desc You can only cancel a committed transaction.
 
  All completion blocks are always called, regardless of cancelation. Execution blocks may be skipped if canceled.
  */

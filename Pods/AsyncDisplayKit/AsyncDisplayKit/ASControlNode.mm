@@ -9,6 +9,10 @@
 #import "ASControlNode.h"
 #import "ASControlNode+Subclasses.h"
 #import "ASThread.h"
+#import "ASDisplayNodeExtras.h"
+#import "ASImageNode.h"
+#import "AsyncDisplayKit+Debug.h"
+#import "ASInternalHelpers.h"
 
 // UIControl allows dragging some distance outside of the control itself during
 // tracking. This value depends on the device idiom (25 or 70 points), so
@@ -69,15 +73,14 @@ void _ASEnumerateControlEventsIncludedInMaskWithBlock(ASControlNodeEvent mask, v
 
 @end
 
-static BOOL _enableHitTestDebug = NO;
-
 @implementation ASControlNode
 {
-  ASDisplayNode *_debugHighlightOverlay;
+  ASImageNode *_debugHighlightOverlay;
 }
 
 #pragma mark - Lifecycle
-- (id)init
+
+- (instancetype)init
 {
   if (!(self = [super init]))
     return nil;
@@ -86,8 +89,28 @@ static BOOL _enableHitTestDebug = NO;
 
   // As we have no targets yet, we start off with user interaction off. When a target is added, it'll get turned back on.
   self.userInteractionEnabled = NO;
+  
   return self;
 }
+
+#if TARGET_OS_TV
+- (void)didLoad
+{
+  // On tvOS all controls, such as buttons, interact with the focus system even if they don't have a target set on them.
+  // Here we add our own internal tap gesture to handle this behaviour.
+  self.userInteractionEnabled = YES;
+  UITapGestureRecognizer *tapGestureRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressDown)];
+  tapGestureRec.allowedPressTypes = @[@(UIPressTypeSelect)];
+  [self.view addGestureRecognizer:tapGestureRec];
+}
+#endif
+
+- (void)setUserInteractionEnabled:(BOOL)userInteractionEnabled
+{
+  [super setUserInteractionEnabled:userInteractionEnabled];
+  self.isAccessibilityElement = userInteractionEnabled;
+}
+
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
@@ -239,15 +262,15 @@ static BOOL _enableHitTestDebug = NO;
     _controlEventDispatchTable = [[NSMutableDictionary alloc] initWithCapacity:kASControlNodeEventDispatchTableInitialCapacity]; // enough to handle common types without re-hashing the dictionary when adding entries.
     
     // only show tap-able areas for views with 1 or more addTarget:action: pairs
-    if (_enableHitTestDebug) {
-      
-      // add a highlight overlay node with area of ASControlNode + UIEdgeInsets
-      self.clipsToBounds = NO;
-      _debugHighlightOverlay = [[ASDisplayNode alloc] init];
-      _debugHighlightOverlay.layerBacked = YES;
-      _debugHighlightOverlay.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
-      
-      [self addSubnode:_debugHighlightOverlay];
+    if ([ASControlNode enableHitTestDebug] && _debugHighlightOverlay == nil) {
+      ASPerformBlockOnMainThread(^{
+        // add a highlight overlay node with area of ASControlNode + UIEdgeInsets
+        self.clipsToBounds = NO;
+        _debugHighlightOverlay = [[ASImageNode alloc] init];
+        _debugHighlightOverlay.zPosition = 1000;  // ensure we're over the top of any siblings
+        _debugHighlightOverlay.layerBacked = YES;
+        [self addSubnode:_debugHighlightOverlay];
+      });
     }
   }
 
@@ -257,26 +280,27 @@ static BOOL _enableHitTestDebug = NO;
     {
       // Do we already have an event table for this control event?
       id<NSCopying> eventKey = _ASControlNodeEventKeyForControlEvent(controlEvent);
-      NSMapTable *eventDispatchTable = [_controlEventDispatchTable objectForKey:eventKey];
+      NSMapTable *eventDispatchTable = _controlEventDispatchTable[eventKey];
       // Create it if necessary.
       if (!eventDispatchTable)
       {
         // Create the dispatch table for this event.
         eventDispatchTable = [NSMapTable weakToStrongObjectsMapTable];
-        [_controlEventDispatchTable setObject:eventDispatchTable forKey:eventKey];
+        _controlEventDispatchTable[eventKey] = eventDispatchTable;
       }
 
       // Have we seen this target before for this event?
-      NSMutableArray *targetActions = [eventDispatchTable objectForKey:target];
+      NSMutableSet *targetActions = [eventDispatchTable objectForKey:target];
       if (!targetActions)
       {
-        // Nope. Create an actions array for it.
-        targetActions = [[NSMutableArray alloc] initWithCapacity:kASControlNodeActionDispatchTableInitialCapacity]; // enough to handle common types without re-hashing the dictionary when adding entries.
+        // Nope. Create an action set for it.
+        targetActions = [[NSMutableSet alloc] initWithCapacity:kASControlNodeActionDispatchTableInitialCapacity]; // enough to handle common types without re-hashing the dictionary when adding entries.
         [eventDispatchTable setObject:targetActions forKey:target];
       }
 
       // Add the action message.
-      // Note that bizarrely enough UIControl (at least according to the docs) supports duplicate target-action pairs for a particular control event, so we replicate that behavior.
+      // UIControl does not support duplicate target-action-events entries, so we replicate that behavior.
+      // See: https://github.com/facebook/AsyncDisplayKit/files/205466/DuplicateActionsTest.playground.zip
       [targetActions addObject:NSStringFromSelector(action)];
     });
 
@@ -291,7 +315,7 @@ static BOOL _enableHitTestDebug = NO;
   ASDN::MutexLocker l(_controlLock);
   
   // Grab the event dispatch table for this event.
-  NSMapTable *eventDispatchTable = [_controlEventDispatchTable objectForKey:_ASControlNodeEventKeyForControlEvent(controlEvent)];
+  NSMapTable *eventDispatchTable = _controlEventDispatchTable[_ASControlNodeEventKeyForControlEvent(controlEvent)];
   if (!eventDispatchTable)
     return nil;
 
@@ -328,7 +352,7 @@ static BOOL _enableHitTestDebug = NO;
     {
       // Grab the dispatch table for this event (if we have it).
       id<NSCopying> eventKey = _ASControlNodeEventKeyForControlEvent(controlEvent);
-      NSMapTable *eventDispatchTable = [_controlEventDispatchTable objectForKey:eventKey];
+      NSMapTable *eventDispatchTable = _controlEventDispatchTable[eventKey];
       if (!eventDispatchTable)
         return;
 
@@ -361,7 +385,7 @@ static BOOL _enableHitTestDebug = NO;
       if (!target)
       {
         // Look at every target, removing target-pairs that have action (or all of its actions).
-        for (id aTarget in eventDispatchTable)
+        for (id aTarget in [eventDispatchTable copy])
           removeActionFromTarget(aTarget, action);
       }
       else
@@ -381,7 +405,7 @@ static BOOL _enableHitTestDebug = NO;
     (ASControlNodeEvent controlEvent)
     {
       // Use a copy to itereate, the action perform could call remove causing a mutation crash.
-      NSMapTable *eventDispatchTable = [[_controlEventDispatchTable objectForKey:_ASControlNodeEventKeyForControlEvent(controlEvent)] copy];
+      NSMapTable *eventDispatchTable = [_controlEventDispatchTable[_ASControlNodeEventKeyForControlEvent(controlEvent)] copy];
 
       // For each target interested in this event...
       for (id target in eventDispatchTable)
@@ -413,7 +437,7 @@ static BOOL _enableHitTestDebug = NO;
 
 id<NSCopying> _ASControlNodeEventKeyForControlEvent(ASControlNodeEvent controlEvent)
 {
-  return [NSNumber numberWithInteger:controlEvent];
+  return @(controlEvent);
 }
 
 void _ASEnumerateControlEventsIncludedInMaskWithBlock(ASControlNodeEvent mask, void (^block)(ASControlNodeEvent anEvent))
@@ -447,25 +471,9 @@ void _ASEnumerateControlEventsIncludedInMaskWithBlock(ASControlNodeEvent mask, v
 }
 
 #pragma mark - Debug
-// Layout method required when _enableHitTestDebug is enabled.
-- (void)layout
+- (ASImageNode *)debugHighlightOverlay
 {
-  [super layout];
-  
-  if (_debugHighlightOverlay) {
-    UIEdgeInsets insets = [self hitTestSlop];
-    CGRect controlNodeRect = self.bounds;
-    _debugHighlightOverlay.frame = CGRectMake(controlNodeRect.origin.x + insets.left,
-                                              controlNodeRect.origin.y + insets.top,
-                                              controlNodeRect.size.width - insets.left - insets.right,
-                                              controlNodeRect.size.height - insets.top - insets.bottom);
-  }
+  return _debugHighlightOverlay;
 }
-
-+ (void)setEnableHitTestDebug:(BOOL)enable
-{
-  _enableHitTestDebug = enable;
-}
-
 
 @end

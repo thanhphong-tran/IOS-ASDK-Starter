@@ -95,14 +95,14 @@
     self.image = image;
 }
 
-- (void)pin_updateUIWithImage:(PINImage *)image animatedImage:(FLAnimatedImage *)animatedImage
+- (void)pin_updateUIWithRemoteImageManagerResult:(PINRemoteImageManagerResult *)result
 {
-    if (image) {
-        self.image = image;
+    if (result.image) {
+        self.image = result.image;
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if PIN_TARGET_IOS
         [self setNeedsLayout];
-#else
+#elif PIN_TARGET_MAC
         [self setNeedsLayout:YES];
 #endif
     }
@@ -112,9 +112,9 @@
 {
     self.image = nil;
     
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if PIN_TARGET_IOS
     [self setNeedsLayout];
-#else
+#elif PIN_TARGET_MAC
     [self setNeedsLayout:YES];
 #endif
 }
