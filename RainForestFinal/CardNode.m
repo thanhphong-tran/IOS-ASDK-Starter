@@ -108,21 +108,39 @@
     self.backgroundImageNode.image = image;
 }
 
-- (void)displayWillStart
-{
-    [super displayWillStart];
-    
-}
+#pragma mark 
 
-- (void)displayDidFinish
-{
-    [super displayDidFinish];
-    
-    self.alpha = 0.0;
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        self.alpha = 1.0;
-    }];
-}
+//- (void)visibleStateDidChange:(BOOL)isVisible
+//{
+//    [super visibleStateDidChange:isVisible];
+//
+//    if (isVisible) {
+//        NSLog(@"%@ is visible!", self.name);
+//    } else {
+//        NSLog(@"%@ left the screen", self.name);
+//    }
+//}
+//
+//- (void)displayStateDidChange:(BOOL)inDisplayState
+//{
+//    [super displayStateDidChange:inDisplayState];
+//
+//    if (inDisplayState) {
+//        NSLog(@"%@ has started rendering!", self.name);
+//    } else {
+//        NSLog(@"%@ has left the view display state.", self.name);
+//    }
+//}
+//
+//- (void)loadStateDidChange:(BOOL)inLoadState
+//{
+//    [super loadStateDidChange:inLoadState];
+//
+//    if (inLoadState) {
+//        NSLog(@"%@ is loading data!", self.name);
+//    } else {
+//        NSLog(@"%@ has left the data loading range.", self.name);
+//    }
+//}
 
 @end
