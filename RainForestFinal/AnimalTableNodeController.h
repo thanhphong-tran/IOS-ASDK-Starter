@@ -1,10 +1,9 @@
-
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
-@interface AnimalTableNodeController : ASViewController
+@class RainforestCardInfo;
 
-@property (strong, nonatomic) ASTableNode *tableNode;
-@property (assign, nonatomic) NSInteger index;
+@interface AnimalTableNodeController : ASViewController<ASTableNode *>
 
-- (instancetype)initWithAnimals:(NSArray *)animals;
+- (instancetype)initWithAnimals:(NSMutableArray<RainforestCardInfo *> *)animals;
+
 @end

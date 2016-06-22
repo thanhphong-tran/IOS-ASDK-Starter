@@ -8,6 +8,8 @@
 
 @interface CardNode ()<ASNetworkImageNodeDelegate>
 
+@property (strong, nonatomic) RainforestCardInfo *animalInfo;
+
 @property (strong, nonatomic) ASImageNode *backgroundImageNode;
 @property (strong, nonatomic) ASNetworkImageNode *animalImageNode;
 @property (strong, nonatomic) ASTextNode *animalNameTextNode;
@@ -20,11 +22,11 @@
 
 @implementation CardNode
 
+#pragma mark - Lifecycle
+
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 {
     if (!(self = [super init])) { return nil; }
-    
-    self.animalImageNode.URL = [NSURL URLWithString:@"https://someurl.com/image_uri"];
     
     self.animalInfo = animalInfo;
     
@@ -55,8 +57,9 @@
     //Background Image
     self.backgroundImageNode.placeholderFadeDuration = 0.15;
     self.backgroundImageNode.imageModificationBlock = ^(UIImage *image) {
-        UIImage *newImage = [image applyBlurWithRadius:30 tintColor:[UIColor colorWithWhite:0.5 alpha:0.3] saturationDeltaFactor:1.8 maskImage:nil];
-        return newImage ? newImage : image;
+        UIColor *tintColor = [UIColor colorWithWhite:0.5 alpha:0.3];
+        UIImage *newImage = [image applyBlurWithRadius:30 tintColor:tintColor saturationDeltaFactor:1.8 maskImage:nil];
+        return newImage ?: image;
     };
     
     //Gradient Node
@@ -72,6 +75,8 @@
     
     return self;
 }
+
+#pragma mark - ASDisplayNode
 
 - (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
 {
@@ -89,8 +94,7 @@
     ASInsetLayoutSpec *descriptionTextInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0) child:self.animalDescriptionTextNode];
     self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width, self.preferredFrameSize.height * (1.0/3.0));
     
-    CGFloat height = [UIScreen mainScreen].bounds.size.height/3.0;
-    ASStaticLayoutSpec *staticLayoutSpec = [ASStaticLayoutSpec staticLayoutSpecWithChildren:@[descriptionTextInsetSpec]];
+    CGFloat height = self.preferredFrameSize.height/3.0;
     descriptionTextInsetSpec.sizeRange = ASRelativeSizeRangeMake(
                                                 ASRelativeSizeMake(
                                                         ASRelativeDimensionMake(ASRelativeDimensionTypePercent, 1.0),
@@ -98,15 +102,14 @@
                                                 ASRelativeSizeMake(
                                                         ASRelativeDimensionMake(ASRelativeDimensionTypePercent, 1.0),
                                                         ASRelativeDimensionMake(ASRelativeDimensionTypePoints, height)));
+    ASStaticLayoutSpec *staticLayoutSpec = [ASStaticLayoutSpec staticLayoutSpecWithChildren:@[descriptionTextInsetSpec]];
     
     ASStackLayoutSpec *verticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentStart alignItems:ASStackLayoutAlignItemsStart children:@[titleOverlaySpec, staticLayoutSpec]];
 
-    ASBackgroundLayoutSpec *backgroundLayoutSpec = [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec background:self.backgroundImageNode];
-    
-    return backgroundLayoutSpec;
+    return [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec background:self.backgroundImageNode];
 }
 
-#pragma mark ASNetworkImageNode Delegate
+#pragma mark - ASNetworkImageNodeDelegate
 
 - (void)imageNode:(ASNetworkImageNode *)imageNode didFailWithError:(NSError *)error
 {
@@ -118,8 +121,10 @@
     self.backgroundImageNode.image = image;
 }
 
-#pragma mark Interface Callbacks
-#pragma mark -- Fetch Data
+#pragma mark - Interface Callbacks
+
+#pragma mark Fetch Data
+
 - (void)fetchData
 {
     [super fetchData];
@@ -135,7 +140,8 @@
 
 }
 
-#pragma mark -- Display
+#pragma mark Display
+
 - (void)displayWillStart
 {
     [super displayWillStart];
@@ -150,7 +156,8 @@
     NSLog(@"%@ finished Display", self.name);
 }
 
-#pragma mark -- Visible
+#pragma mark Visible
+
 - (void)visibilityDidChange:(BOOL)isVisible
 {
     [super visibilityDidChange:isVisible];

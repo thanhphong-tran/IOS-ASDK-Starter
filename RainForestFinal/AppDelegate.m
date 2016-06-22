@@ -10,16 +10,11 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    CGRect windowRect = [[UIScreen mainScreen] bounds];
-    
-    _window = [[UIWindow alloc] initWithFrame:windowRect];
-    
-    ViewController *vc = [[ViewController alloc] init];
-    [_window setRootViewController:vc];
-    
-    [_window makeKeyAndVisible];
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = [[ViewController alloc] init];
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

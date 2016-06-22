@@ -6,12 +6,14 @@
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
 @interface AnimalTableNodeController ()<ASTableDataSource, ASTableDelegate>
-@property (strong, nonatomic) NSMutableArray *animals;
+@property (strong, nonatomic) NSMutableArray<RainforestCardInfo *> *animals;
 @end
 
 @implementation AnimalTableNodeController
 
-- (instancetype)initWithAnimals:(NSMutableArray *)animals
+#pragma mark - Lifecycle
+
+- (instancetype)initWithAnimals:(NSMutableArray<RainforestCardInfo *> *)animals
 {
     ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
 
@@ -19,30 +21,25 @@
 
     self.animals = animals;
     
-    self.tableNode = tableNode;
-    self.tableNode.dataSource = self;
-    self.tableNode.delegate = self;
-    
-    self.tableNode.view.leadingScreensForBatching = 1.0;  // overriding default of 2.0
+    self.node.dataSource = self;
+    self.node.delegate = self;
     
     return self;
 }
 
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    
-    self.tableNode.frame = [UIScreen mainScreen].bounds;
-}
+#pragma mark - UIViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor blackColor];
+    self.node.view.leadingScreensForBatching = 1.0;  // overriding default of 2.0
 }
 
-#pragma mark ASTableNode Delegate
+
+#pragma mark - ASTableDelegate
+
 - (void)tableView:(ASTableView *)tableView willBeginBatchFetchWithContext:(ASBatchContext *)context
 {
     //1
@@ -60,7 +57,8 @@
     return YES;
 }
 
-#pragma mark ASTableNode DataSource
+#pragma mark - ASTableDataSource
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -69,11 +67,12 @@
 - (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RainforestCardInfo *animal = self.animals[indexPath.row];
+    CGSize tableViewSize = tableView.bounds.size;
     
     return ^{
         CardNode *node = [[CardNode alloc] initWithAnimal:animal];
         
-        node.preferredFrameSize = [UIScreen mainScreen].bounds.size;
+        node.preferredFrameSize = tableViewSize;
         node.name = [NSString stringWithFormat:@"cell %ld", (long)indexPath.row];
 
         return node;
@@ -85,7 +84,8 @@
     return self.animals.count;
 }
 
-#pragma mark Helpers
+#pragma mark - Helpers
+
 - (void)nextPageWithCompletion:(void (^)(NSArray *))block
 {
     NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
@@ -108,7 +108,7 @@
     }
     
     [self.animals addObjectsFromArray:newAnimals];
-    [self.tableNode.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [self.node.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end
