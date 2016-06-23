@@ -1,9 +1,9 @@
 
 #import "RainforestCardInfo.h"
 
-NSString const* BIRD_BASE_URL = @"https://www.raywenderlich.com/downloads/Progressive_Images/Birds";
-NSString const* MAMMAL_BASE_URL = @"https://www.raywenderlich.com/downloads/Progressive_Images/Mammals";
-NSString const* REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Progressive_Images/Reptiles";
+static NSString * const BIRD_BASE_URL = @"https://www.raywenderlich.com/downloads/Progressive_Images/Birds";
+static NSString * const MAMMAL_BASE_URL = @"https://www.raywenderlich.com/downloads/Progressive_Images/Mammals";
+static NSString * const REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Progressive_Images/Reptiles";
 
 @implementation RainforestCardInfo
 

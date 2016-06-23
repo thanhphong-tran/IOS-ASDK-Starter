@@ -1,8 +1,5 @@
 
-#import <UIKit/UIKit.h>
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
-
-#import <AsyncDisplayKit/ASDisplayNode+Subclasses.h>
 
 @class RainforestCardInfo;
 
@@ -10,5 +7,4 @@
 
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 
-@property (strong, nonatomic) RainforestCardInfo *animalInfo;
 @end
