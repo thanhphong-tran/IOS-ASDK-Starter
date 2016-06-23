@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASNetworkImageNode.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASNetworkImageNode.h"
 
@@ -42,9 +44,11 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
   CGFloat _currentImageQuality;
   CGFloat _renderedImageQuality;
 
+  // TODO: Move this to flags
   BOOL _delegateSupportsDidStartFetchingData;
   BOOL _delegateSupportsDidFailWithError;
-  BOOL _delegateSupportsImageNodeDidFinishDecoding;
+  BOOL _delegateSupportsDidFinishDecoding;
+  BOOL _delegateSupportsDidLoadImage;
   
   BOOL _shouldRenderProgressImages;
 
@@ -212,7 +216,8 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
   
   _delegateSupportsDidStartFetchingData = [delegate respondsToSelector:@selector(imageNodeDidStartFetchingData:)];
   _delegateSupportsDidFailWithError = [delegate respondsToSelector:@selector(imageNode:didFailWithError:)];
-  _delegateSupportsImageNodeDidFinishDecoding = [delegate respondsToSelector:@selector(imageNodeDidFinishDecoding:)];
+  _delegateSupportsDidFinishDecoding = [delegate respondsToSelector:@selector(imageNodeDidFinishDecoding:)];
+  _delegateSupportsDidLoadImage = [delegate respondsToSelector:@selector(imageNode:didLoadImage:)];
 }
 
 - (id<ASNetworkImageNodeDelegate>)delegate
@@ -278,11 +283,11 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
   }
 }
 
-/* visibilityDidChange in ASMultiplexImageNode has a very similar implementation. Changes here are likely necessary
+/* visibileStateDidChange in ASMultiplexImageNode has a very similar implementation. Changes here are likely necessary
  in ASMultiplexImageNode as well. */
-- (void)visibilityDidChange:(BOOL)isVisible
+- (void)visibleStateDidChange:(BOOL)isVisible
 {
-  [super visibilityDidChange:isVisible];
+  [super visibleStateDidChange:isVisible];
 
   if (_downloaderImplementsSetPriority) {
     _lock.lock();
@@ -376,7 +381,7 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
   BOOL shouldReleaseImageOnBackgroundThread = imageSize.width > kMinReleaseImageOnBackgroundSize.width ||
                                               imageSize.height > kMinReleaseImageOnBackgroundSize.height;
   if (shouldReleaseImageOnBackgroundThread) {
-    ASPerformBlockOnBackgroundThread(^{
+    ASPerformBlockOnDeallocationQueue(^{
       image = nil;
     });
   }
@@ -457,14 +462,31 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
           } else {
             // First try to load the path directly, for efficiency assuming a developer who
             // doesn't want caching is trying to be as minimal as possible.
-            self.image = [UIImage imageWithContentsOfFile:_URL.path];
-            if (!self.image) {
+            UIImage *nonAnimatedImage = [UIImage imageWithContentsOfFile:_URL.path];
+            if (nonAnimatedImage == nil) {
               // If we couldn't find it, execute an -imageNamed:-like search so we can find resources even if the
               // extension is not provided in the path.  This allows the same path to work regardless of shouldCacheImage.
               NSString *filename = [[NSBundle mainBundle] pathForResource:_URL.path.lastPathComponent ofType:nil];
-              if (filename) {
-                self.image = [UIImage imageWithContentsOfFile:filename];
+              if (filename != nil) {
+                nonAnimatedImage = [UIImage imageWithContentsOfFile:filename];
               }
+            }
+
+            // If the file may be an animated gif and then created an animated image.
+            id<ASAnimatedImageProtocol> animatedImage = nil;
+            if (_downloaderImplementsAnimatedImage) {
+              NSData *data = [NSData dataWithContentsOfURL:_URL];
+              animatedImage = [_downloader animatedImageWithData:data];
+
+              if ([animatedImage respondsToSelector:@selector(isDataSupported:)] && [animatedImage isDataSupported:data] == NO) {
+                animatedImage = nil;
+              }
+            }
+
+            if (animatedImage != nil) {
+              self.animatedImage = animatedImage;
+            } else {
+              self.image = nonAnimatedImage;
             }
           }
 
@@ -475,7 +497,9 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
           dispatch_async(dispatch_get_main_queue(), ^{
             self.currentImageQuality = 1.0;
           });
-          [_delegate imageNode:self didLoadImage:self.image];
+          if (_delegateSupportsDidLoadImage) {
+            [_delegate imageNode:self didLoadImage:self.image];
+          }
         });
       }
     } else {
@@ -510,7 +534,9 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
         strongSelf->_cacheUUID = nil;
 
         if (imageContainer != nil) {
-          [strongSelf->_delegate imageNode:strongSelf didLoadImage:strongSelf.image];
+          if (strongSelf->_delegateSupportsDidLoadImage) {
+            [strongSelf->_delegate imageNode:strongSelf didLoadImage:strongSelf.image];
+          }
         }
         else if (error && strongSelf->_delegateSupportsDidFailWithError) {
           [strongSelf->_delegate imageNode:strongSelf didFailWithError:error];
@@ -562,7 +588,7 @@ static const CGSize kMinReleaseImageOnBackgroundSize = {20.0, 20.0};
   [super displayDidFinish];
 
   ASDN::MutexLocker l(_lock);
-  if (_delegateSupportsImageNodeDidFinishDecoding && self.layer.contents != nil) {
+  if (_delegateSupportsDidFinishDecoding && self.layer.contents != nil) {
     /* We store the image quality in _currentImageQuality whenever _image is set. On the following displayDidFinish, we'll know that
      _currentImageQuality is the quality of the image that has just finished rendering. In order for this to be accurate, we
      need to be sure we are on main thread when we set _currentImageQuality. Otherwise, it is possible for _currentImageQuality

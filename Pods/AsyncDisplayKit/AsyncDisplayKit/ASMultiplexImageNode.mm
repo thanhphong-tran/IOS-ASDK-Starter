@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASMultiplexImageNode.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #if TARGET_OS_IOS
 
@@ -295,11 +297,11 @@ typedef void(^ASMultiplexImageLoadCompletionBlock)(UIImage *image, id imageIdent
   }
 }
 
-/* visibilityDidChange in ASNetworkImageNode has a very similar implementation. Changes here are likely necessary
+/* visibileStateDidChange in ASNetworkImageNode has a very similar implementation. Changes here are likely necessary
  in ASNetworkImageNode as well. */
-- (void)visibilityDidChange:(BOOL)isVisible
+- (void)visibleStateDidChange:(BOOL)isVisible
 {
-  [super visibilityDidChange:isVisible];
+  [super visibleStateDidChange:isVisible];
   
   if (_downloaderImplementsSetPriority) {
     ASDN::MutexLocker l(_downloadIdentifierLock);
@@ -529,7 +531,7 @@ typedef void(^ASMultiplexImageLoadCompletionBlock)(UIImage *image, id imageIdent
   BOOL shouldReleaseImageOnBackgroundThread = imageSize.width > kMinReleaseImageOnBackgroundSize.width ||
   imageSize.height > kMinReleaseImageOnBackgroundSize.height;
   if (shouldReleaseImageOnBackgroundThread) {
-    ASPerformBlockOnBackgroundThread(^{
+    ASPerformBlockOnDeallocationQueue(^{
       image = nil;
     });
   }

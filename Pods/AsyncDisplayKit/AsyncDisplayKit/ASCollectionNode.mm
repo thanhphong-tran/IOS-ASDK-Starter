@@ -1,9 +1,13 @@
 //
-//  ASCollectionNode.m
+//  ASCollectionNode.mm
 //  AsyncDisplayKit
 //
 //  Created by Scott Goodson on 9/5/15.
-//  Copyright (c) 2015 Facebook. All rights reserved.
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
 //
 
 #import "ASCollectionNode.h"
@@ -173,9 +177,9 @@
 }
 
 #if ASRangeControllerLoggingEnabled
-- (void)visibilityDidChange:(BOOL)isVisible
+- (void)visibleStateDidChange:(BOOL)isVisible
 {
-  [super visibilityDidChange:isVisible];
+  [super visibleStateDidChange:isVisible];
   NSLog(@"%@ - visible: %d", self, isVisible);
 }
 #endif

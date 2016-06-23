@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASDisplayNode.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASDisplayNodeInternal.h"
 #import "ASDisplayNode+Subclasses.h"
@@ -30,6 +32,7 @@
 #import "ASInternalHelpers.h"
 #import "ASLayout.h"
 #import "ASLayoutSpec.h"
+#import "ASLayoutValidation.h"
 #import "ASCellNode.h"
 
 NSInteger const ASDefaultDrawingPriority = ASDefaultTransactionPriority;
@@ -61,7 +64,9 @@ NSString * const ASRenderingEngineDidDisplayNodesScheduledBeforeTimestamp = @"AS
 @implementation ASDisplayNode
 
 // these dynamic properties all defined in ASLayoutOptionsPrivate.m
-@dynamic spacingAfter, spacingBefore, flexGrow, flexShrink, flexBasis, alignSelf, ascender, descender, sizeRange, layoutPosition;
+@dynamic spacingAfter, spacingBefore, flexGrow, flexShrink, flexBasis,
+         alignSelf, ascender, descender, sizeRange, layoutPosition, layoutableType;
+
 @synthesize name = _name;
 @synthesize preferredFrameSize = _preferredFrameSize;
 @synthesize isFinalLayoutable = _isFinalLayoutable;
@@ -268,6 +273,9 @@ static ASDisplayNodeMethodOverrides GetASDisplayNodeMethodOverrides(Class c)
   _preferredFrameSize = CGSizeZero;
   
   _environmentState = ASEnvironmentStateMakeDefault();
+  
+  _flags.canClearContentsOfLayer = YES;
+  _flags.canCallNeedsDisplayOfLayer = NO;
 }
 
 - (instancetype)init
@@ -434,6 +442,15 @@ static ASDisplayNodeMethodOverrides GetASDisplayNodeMethodOverrides(Class c)
       _viewClass = [self.class viewClass];
     }
     view = [[_viewClass alloc] init];
+  }
+  
+  // Update flags related to special handling of UIImageView layers. More details on the flags
+  if (_flags.synchronous) {
+    if ([view isKindOfClass:[UIImageView class]]) {
+      _flags.canClearContentsOfLayer = NO;
+    } else {
+      _flags.canCallNeedsDisplayOfLayer = YES;
+    }
   }
 
   return view;
@@ -658,6 +675,11 @@ static ASDisplayNodeMethodOverrides GetASDisplayNodeMethodOverrides(Class c)
   return _layout == nil || _layout.isDirty;
 }
 
+- (ASLayoutableType)layoutableType
+{
+  return ASLayoutableTypeDisplayNode;
+}
+
 #pragma mark - Layout Transition
 
 - (void)transitionLayoutWithAnimation:(BOOL)animated
@@ -853,7 +875,6 @@ static ASDisplayNodeMethodOverrides GetASDisplayNodeMethodOverrides(Class c)
   [self _completeLayoutCalculation];
   _pendingLayoutTransition = nil;
 }
-
 
 #pragma mark - _ASTransitionContextCompletionDelegate
 
@@ -1506,40 +1527,36 @@ static NSInteger incrementIfFound(NSInteger i) {
   [subnode __setSupernode:nil];
 }
 
+// NOTE: You must not called this method while holding the receiver's property lock. This may cause deadlocks.
 - (void)removeFromSupernode
 {
   ASDisplayNodeAssertThreadAffinity(self);
-  BOOL shouldRemoveFromSuperviewOrSuperlayer = NO;
+  _propertyLock.lock();
+    __weak ASDisplayNode *supernode = _supernode;
+    __weak UIView *view = _view;
+    __weak CALayer *layer = _layer;
+    BOOL layerBacked = _flags.layerBacked;
+  _propertyLock.unlock();
   
-  {
-    ASDN::MutexLocker l(_propertyLock);
-    if (!_supernode)
-      return;
+  if (supernode == nil) {
+    return;
+  }
 
+  [supernode _removeSubnode:self];
+
+  if (self.nodeLoaded && supernode.nodeLoaded) {
     // Check to ensure that our view or layer is actually inside of our supernode; otherwise, don't remove it.
     // Though _ASDisplayView decouples the supernode if it is inserted inside another view hierarchy, this is
     // more difficult to guarantee with _ASDisplayLayer because CoreAnimation doesn't have a -didMoveToSuperlayer.
-    
-    if (self.nodeLoaded && _supernode.nodeLoaded) {
-      if (_flags.layerBacked || _supernode.layerBacked) {
-        shouldRemoveFromSuperviewOrSuperlayer = (_layer.superlayer == _supernode.layer);
-      } else {
-        shouldRemoveFromSuperviewOrSuperlayer = (_view.superview == _supernode.view);
-      }
-    }
-  }
-  
-  // Do this before removing the view from the hierarchy, as the node will clear its supernode pointer when its view is removed from the hierarchy.
-  // This call may result in the object being destroyed.
-  [_supernode _removeSubnode:self];
-
-  if (shouldRemoveFromSuperviewOrSuperlayer) {
     ASPerformBlockOnMainThread(^{
-      ASDN::MutexLocker l(_propertyLock);
-      if (_flags.layerBacked) {
-        [_layer removeFromSuperlayer];
+      if (layerBacked || supernode.layerBacked) {
+        if (layer.superlayer == supernode.layer) {
+          [layer removeFromSuperlayer];
+        }
       } else {
-        [_view removeFromSuperview];
+        if (view.superview == supernode.view) {
+          [view removeFromSuperview];
+        }
       }
     });
   }
@@ -1783,10 +1800,18 @@ static NSInteger incrementIfFound(NSInteger i) {
   }
 }
 
-// Helper method to summarize whether or not the node run through the display process
+/// Helper method to summarize whether or not the node run through the display process
 - (BOOL)__implementsDisplay
 {
-  return _flags.implementsDrawRect || _flags.implementsImageDisplay || _flags.shouldRasterizeDescendants || _flags.implementsInstanceDrawRect || _flags.implementsInstanceImageDisplay;
+  return _flags.implementsDrawRect || _flags.implementsImageDisplay || _flags.shouldRasterizeDescendants ||
+         _flags.implementsInstanceDrawRect || _flags.implementsInstanceImageDisplay;
+}
+
+// Helper method to determine if it's save to call setNeedsDisplay on a layer without throwing away the content.
+// For details look at the comment on the canCallNeedsDisplayOfLayer flag
+- (BOOL)__canCallNeedsDisplayOfLayer
+{
+  return _flags.canCallNeedsDisplayOfLayer;
 }
 
 - (BOOL)placeholderShouldPersist
@@ -1836,6 +1861,13 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   // (even a runloop observer at a late call order will not stop the next frame from compositing, showing placeholders).
   
   ASDisplayNode *node = [layer asyncdisplaykit_node];
+  
+  if ([node __canCallNeedsDisplayOfLayer]) {
+    // Layers for UIKit components that are wrapped wtihin a node needs to be set to be displayed as the contents of
+    // the layer get's cleared and would not be recreated otherwise
+    [layer setNeedsDisplay];
+  }
+  
   if ([node __implementsDisplay]) {
     // For layers that do get displayed here, this immediately kicks off the work on the concurrent -[_ASDisplayLayer displayQueue].
     // At the same time, it creates an associated _ASAsyncTransaction, which we can use to block on display completion.  See ASDisplayNode+AsyncDisplay.mm.
@@ -1901,24 +1933,22 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   if ((_methodOverrides & ASDisplayNodeMethodOverrideLayoutSpecThatFits) || _layoutSpecBlock != NULL) {
     ASLayoutSpec *layoutSpec = [self layoutSpecThatFits:constrainedSize];
     layoutSpec.parent = self; // This causes upward propogation of any non-default layoutable values.
-    layoutSpec.traitCollection = self.asyncTraitCollection;
+    
+    // manually propagate the trait collection here so that any layoutSpec children of layoutSpec will get a traitCollection
+    ASEnvironmentStatePropagateDown(layoutSpec, self.environmentTraitCollection);
+    
     layoutSpec.isMutable = NO;
     ASLayout *layout = [layoutSpec measureWithSizeRange:constrainedSize];
     // Make sure layoutableObject of the root layout is `self`, so that the flattened layout will be structurally correct.
-    if (layout.layoutableObject != self) {
+    BOOL isFinalLayoutable = (layout.layoutableObject != self);
+    if (isFinalLayoutable) {
       layout.position = CGPointZero;
-      layout = [ASLayout layoutWithLayoutableObject:self
-                               constrainedSizeRange:constrainedSize
-                                               size:layout.size
-                                         sublayouts:@[layout]];
+      layout = [ASLayout layoutWithLayoutableObject:self constrainedSizeRange:constrainedSize size:layout.size sublayouts:@[layout]];
+#if LAYOUT_VALIDATION
+      ASLayoutableValidateLayout(layout);
+#endif
     }
-    return [layout flattenedLayoutUsingPredicateBlock:^BOOL(ASLayout *evaluatedLayout) {
-      if (self.usesImplicitHierarchyManagement) {
-        return ASObjectIsEqual(layout, evaluatedLayout) == NO && [evaluatedLayout.layoutableObject isKindOfClass:[ASDisplayNode class]];
-      } else {
-        return [_subnodes containsObject:evaluatedLayout.layoutableObject];
-      }
-    }];
+    return [layout filteredNodeLayoutTree];
   } else {
     // If neither -layoutSpecThatFits: nor -calculateSizeThatFits: is overridden by subclassses, preferredFrameSize should be used,
     // assume that the default implementation of -calculateSizeThatFits: returns it.
@@ -2040,6 +2070,8 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   ASDisplayNodeAssertMainThread();
 }
 
+#pragma mark Hierarchy State
+
 - (void)willEnterHierarchy
 {
   ASDisplayNodeAssertMainThread();
@@ -2060,7 +2092,7 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   if (![self supportsRangeManagedInterfaceState]) {
     self.interfaceState = ASInterfaceStateNone;
   } else {
-    // This case is important when tearing down hierarchies.  We must deliver a visibilityDidChange:NO callback, as part our API guarantee that this method can be used for
+    // This case is important when tearing down hierarchies.  We must deliver a visibileStateDidChange:NO callback, as part our API guarantee that this method can be used for
     // things like data analytics about user content viewing.  We cannot call the method in the dealloc as any incidental retain operations in client code would fail.
     // Additionally, it may be that a Standard UIView which is containing us is moving between hierarchies, and we should not send the call if we will be re-added in the
     // same runloop.  Strategy: strong reference (might be the last!), wait one runloop, and confirm we are still outside the hierarchy (both layer-backed and view-backed).
@@ -2079,10 +2111,15 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   }
 }
 
+#pragma mark Interface State
+
 - (void)clearContents
 {
-  // No-op if these haven't been created yet, as that guarantees they don't have contents that needs to be released.
-  _layer.contents = nil;
+  if (_flags.canClearContentsOfLayer) {
+    // No-op if these haven't been created yet, as that guarantees they don't have contents that needs to be released.
+    _layer.contents = nil;
+  }
+  
   _placeholderLayer.contents = nil;
   _placeholderImage = nil;
 }
@@ -2127,7 +2164,22 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
 
 - (void)visibilityDidChange:(BOOL)isVisible
 {
-    // subclass override
+  // subclass override
+}
+
+- (void)visibleStateDidChange:(BOOL)isVisible
+{
+  // subclass override
+}
+
+- (void)displayStateDidChange:(BOOL)inDisplayState
+{
+  //subclass override
+}
+
+- (void)loadStateDidChange:(BOOL)inLoadState
+{
+  //subclass override
 }
 
 /**
@@ -2174,10 +2226,12 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   if (nowFetchData != wasFetchData) {
     if (nowFetchData) {
       [self fetchData];
+      [self loadStateDidChange:YES];
     } else {
       if ([self supportsRangeManagedInterfaceState]) {
         [self clearFetchedData];
       }
+      [self loadStateDidChange:NO];
     }
   }
 
@@ -2221,6 +2275,8 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
         }
       }
     }
+    
+    [self displayStateDidChange:nowDisplay];
   }
 
   // Became visible or invisible.  When range-managed, this represents literal visibility - at least one pixel
@@ -2229,14 +2285,16 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
   BOOL wasVisible = ASInterfaceStateIncludesVisible(oldState);
 
   if (nowVisible != wasVisible) {
-    [self visibilityDidChange:nowVisible];
+    [self visibleStateDidChange:nowVisible];
+    [self visibilityDidChange:nowVisible];   //TODO: remove once this method has been deprecated
   }
-  
+
   [self interfaceStateDidChange:newState fromState:oldState];
 }
 
 - (void)interfaceStateDidChange:(ASInterfaceState)newState fromState:(ASInterfaceState)oldState
 {
+  // subclass hook
 }
 
 - (void)enterInterfaceState:(ASInterfaceState)interfaceState
@@ -2386,7 +2444,7 @@ void recursivelyTriggerDisplayForLayer(CALayer *layer, BOOL shouldBlock)
 
 - (void)__layoutSublayouts
 {
-  for (ASLayout *subnodeLayout in _layout.immediateSublayouts) {
+  for (ASLayout *subnodeLayout in _layout.sublayouts) {
     ((ASDisplayNode *)subnodeLayout.layoutableObject).frame = [subnodeLayout frame];
   }
 }

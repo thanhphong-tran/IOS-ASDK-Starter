@@ -3,7 +3,11 @@
 //  AsyncDisplayKit
 //
 //  Created by Huy Nguyen on 3/8/16.
-//  Copyright © 2016 Facebook. All rights reserved.
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
 //
 
 #import "ASLayoutTransition.h"
@@ -44,9 +48,12 @@
 {
   ASDN::MutexLocker l(_propertyLock);
   [self calculateSubnodeOperationsIfNeeded];
-  for (NSUInteger i = 0; i < [_insertedSubnodes count]; i++) {
+  
+  NSUInteger i = 0;
+  for (ASDisplayNode *node in _insertedSubnodes) {
     NSUInteger p = _insertedSubnodePositions[i];
-    [_node insertSubnode:_insertedSubnodes[i] atIndex:p];
+    [_node insertSubnode:node atIndex:p];
+    i += 1;
   }
 }
 
@@ -54,8 +61,8 @@
 {
   ASDN::MutexLocker l(_propertyLock);
   [self calculateSubnodeOperationsIfNeeded];
-  for (NSUInteger i = 0; i < [_removedSubnodes count]; i++) {
-    [_removedSubnodes[i] removeFromSupernode];
+  for (ASDisplayNode *subnode in _removedSubnodes) {
+    [subnode removeFromSupernode];
   }
 }
 
@@ -67,7 +74,7 @@
   }
   if (_previousLayout) {
     NSIndexSet *insertions, *deletions;
-    [_previousLayout.immediateSublayouts asdk_diffWithArray:_pendingLayout.immediateSublayouts
+    [_previousLayout.sublayouts asdk_diffWithArray:_pendingLayout.sublayouts
                                                  insertions:&insertions
                                                   deletions:&deletions
                                                compareBlock:^BOOL(ASLayout *lhs, ASLayout *rhs) {
@@ -80,7 +87,7 @@
                                                       &_removedSubnodes,
                                                       &_removedSubnodePositions);
   } else {
-    NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_pendingLayout.immediateSublayouts count])];
+    NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_pendingLayout.sublayouts count])];
     findNodesInLayoutAtIndexes(_pendingLayout, indexes, &_insertedSubnodes, &_insertedSubnodePositions);
     _removedSubnodes = nil;
   }
@@ -160,7 +167,7 @@ static inline void findNodesInLayoutAtIndexesWithFilteredNodes(ASLayout *layout,
   std::vector<NSUInteger> positions = std::vector<NSUInteger>();
   NSUInteger idx = [indexes firstIndex];
   while (idx != NSNotFound) {
-    ASDisplayNode *node = (ASDisplayNode *)layout.immediateSublayouts[idx].layoutableObject;
+    ASDisplayNode *node = (ASDisplayNode *)layout.sublayouts[idx].layoutableObject;
     ASDisplayNodeCAssert(node, @"A flattened layout must consist exclusively of node sublayouts");
     // Ignore the odd case in which a non-node sublayout is accessed and the type cast fails
     if (node != nil) {

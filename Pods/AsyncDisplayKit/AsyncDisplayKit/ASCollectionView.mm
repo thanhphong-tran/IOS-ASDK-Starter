@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASCollectionView.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASAssert.h"
 #import "ASBatchFetching.h"
@@ -1000,6 +1002,7 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 - (NSArray *)visibleNodeIndexPathsForRangeController:(ASRangeController *)rangeController
 {
   ASDisplayNodeAssertMainThread();
+  
   // Calling visibleNodeIndexPathsForRangeController: will trigger UIKit to call reloadData if it never has, which can result
   // in incorrect layout if performed at zero size.  We can use the fact that nothing can be visible at zero size to return fast.
   BOOL isZeroSized = CGRectEqualToRect(self.bounds, CGRectZero);
@@ -1061,6 +1064,11 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
   
   [_batchUpdateBlocks removeAllObjects];
   _performingBatchUpdates = NO;
+}
+
+- (void)didCompleteUpdatesInRangeController:(ASRangeController *)rangeController
+{
+  [self _checkForBatchFetching];
 }
 
 - (void)rangeController:(ASRangeController *)rangeController didInsertNodes:(NSArray *)nodes atIndexPaths:(NSArray *)indexPaths withAnimationOptions:(ASDataControllerAnimationOptions)animationOptions

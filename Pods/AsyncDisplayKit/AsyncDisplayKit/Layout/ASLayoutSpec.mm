@@ -1,12 +1,12 @@
-/*
- *  Copyright (c) 2014-present, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- *
- */
+//
+//  ASLayoutSpec.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASLayoutSpec.h"
 
@@ -34,7 +34,8 @@
 @implementation ASLayoutSpec
 
 // these dynamic properties all defined in ASLayoutOptionsPrivate.m
-@dynamic spacingAfter, spacingBefore, flexGrow, flexShrink, flexBasis, alignSelf, ascender, descender, sizeRange, layoutPosition;
+@dynamic spacingAfter, spacingBefore, flexGrow, flexShrink, flexBasis,
+         alignSelf, ascender, descender, sizeRange, layoutPosition, layoutableType;
 @synthesize isFinalLayoutable = _isFinalLayoutable;
 
 - (instancetype)init
@@ -46,6 +47,11 @@
   _environmentState = ASEnvironmentStateMakeDefault();
   _children = [NSArray array];
   return self;
+}
+
+- (ASLayoutableType)layoutableType
+{
+  return ASLayoutableTypeLayoutSpec;
 }
 
 #pragma mark - Layout
@@ -183,14 +189,6 @@
 - (NSArray *)children
 {
   return _children;
-}
-
-- (void)setTraitCollection:(ASTraitCollection *)traitCollection
-{
-  if ([traitCollection isEqualToTraitCollection:self.traitCollection] == NO) {
-    _traitCollection = traitCollection;
-    ASEnvironmentStatePropagateDown(self, [traitCollection environmentTraitCollection]);
-  }
 }
 
 #pragma mark - ASEnvironment

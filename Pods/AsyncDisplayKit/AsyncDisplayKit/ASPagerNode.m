@@ -3,7 +3,11 @@
 //  AsyncDisplayKit
 //
 //  Created by Levi McCallum on 12/7/15.
-//  Copyright © 2015 Facebook. All rights reserved.
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
 //
 
 #import "ASPagerNode.h"
@@ -16,7 +20,7 @@
 {
   ASPagerFlowLayout *_flowLayout;
   ASPagerNodeProxy *_proxy;
-  __weak id <ASPagerDataSource> _pagerDataSource;
+  __weak id <ASPagerNodeDataSource> _pagerDataSource;
   BOOL _pagerDataSourceImplementsNodeBlockAtIndex;
   BOOL _pagerDataSourceImplementsConstrainedSizeForNode;
 }
@@ -25,6 +29,8 @@
 
 @implementation ASPagerNode
 @dynamic view, delegate, dataSource;
+
+#pragma mark - Lifecycle
 
 - (instancetype)init
 {
@@ -45,6 +51,8 @@
   }
   return self;
 }
+
+#pragma mark - ASDisplayNode
 
 - (void)didLoad
 {
@@ -73,6 +81,13 @@
   ASRangeTuningParameters fullPreloadParams = { .leadingBufferScreenfuls = 2.0, .trailingBufferScreenfuls = 2.0 };
   [self setTuningParameters:fullRenderParams forRangeMode:ASLayoutRangeModeFull rangeType:ASLayoutRangeTypeDisplay];
   [self setTuningParameters:fullPreloadParams forRangeMode:ASLayoutRangeModeFull rangeType:ASLayoutRangeTypeFetchData];
+}
+
+#pragma mark - Getters / Setters
+
+- (NSInteger)currentPageIndex
+{
+  return (self.view.contentOffset.x / CGRectGetWidth(self.view.bounds));
 }
 
 #pragma mark - Helpers

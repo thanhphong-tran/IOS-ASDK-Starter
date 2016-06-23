@@ -5,6 +5,6 @@
 
 target 'RainForestFinal' do
   pod "AFNetworking", "~> 2.0"
-  pod "AsyncDisplayKit", "1.9.80"
+  pod "AsyncDisplayKit", git: "git@github.com:facebook/AsyncDisplayKit.git", branch: "master"
 end
 

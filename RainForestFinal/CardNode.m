@@ -108,7 +108,7 @@
     self.backgroundImageNode.image = image;
 }
 
-#pragma mark 
+#pragma mark -- Interface State Callbacks
 
 //- (void)visibleStateDidChange:(BOOL)isVisible
 //{

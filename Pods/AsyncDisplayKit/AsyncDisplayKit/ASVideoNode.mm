@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASVideoNode.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 #if TARGET_OS_IOS
 #import "ASVideoNode.h"
 #import "ASDefaultPlayButton.h"
@@ -224,7 +226,7 @@ static NSString * const kStatus = @"status";
 - (void)generatePlaceholderImage
 {
   ASVideoNode * __weak weakSelf = self;
-  AVAsset * __weak asset = self.asset;
+  AVAsset *asset = self.asset;
 
   [self imageAtTime:kCMTimeZero completionHandler:^(UIImage *image) {
     ASPerformBlockOnMainThread(^{
@@ -382,9 +384,9 @@ static NSString * const kStatus = @"status";
   }
 }
 
-- (void)visibilityDidChange:(BOOL)isVisible
+- (void)visibleStateDidChange:(BOOL)isVisible
 {
-  [super visibilityDidChange:isVisible];
+  [super visibleStateDidChange:isVisible];
   
   ASDN::MutexLocker l(_videoLock);
   

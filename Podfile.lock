@@ -36,7 +36,17 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
-  - AsyncDisplayKit (= 1.9.80)
+  - AsyncDisplayKit (from `git@github.com:facebook/AsyncDisplayKit.git`, branch `master`)
+
+EXTERNAL SOURCES:
+  AsyncDisplayKit:
+    :branch: master
+    :git: git@github.com:facebook/AsyncDisplayKit.git
+
+CHECKOUT OPTIONS:
+  AsyncDisplayKit:
+    :commit: ea64d7d09be74580a27f7f4b2a9e3b358705a71b
+    :git: git@github.com:facebook/AsyncDisplayKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
