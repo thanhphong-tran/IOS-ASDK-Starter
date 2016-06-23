@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASButtonNode.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASButtonNode.h"
 #import "ASStackLayoutSpec.h"
@@ -57,9 +59,10 @@
     
     _contentSpacing = 8.0;
     _laysOutHorizontally = YES;
-    _contentHorizontalAlignment = ASAlignmentMiddle;
-    _contentVerticalAlignment = ASAlignmentCenter;
+    _contentHorizontalAlignment = ASHorizontalAlignmentMiddle;
+    _contentVerticalAlignment = ASVerticalAlignmentCenter;
     _contentEdgeInsets = UIEdgeInsetsZero;
+    self.accessibilityTraits = UIAccessibilityTraitButton;
   }
   return self;
 }
@@ -68,7 +71,11 @@
 {
   if (!_titleNode) {
     _titleNode = [[ASTextNode alloc] init];
+#if TARGET_OS_IOS 
+      // tvOS needs access to the underlying view
+      // of the button node to add a touch handler.
     [_titleNode setLayerBacked:YES];
+#endif
     [_titleNode setFlexShrink:YES];
   }
   return _titleNode;
@@ -102,6 +109,11 @@
 - (void)setEnabled:(BOOL)enabled
 {
   [super setEnabled:enabled];
+  if (enabled) {
+    self.accessibilityTraits = UIAccessibilityTraitButton;
+  } else {
+    self.accessibilityTraits = UIAccessibilityTraitButton | UIAccessibilityTraitNotEnabled;
+  }
   [self updateButtonContent];
 }
 
@@ -135,7 +147,7 @@
 - (void)updateImage
 {
   ASDN::MutexLocker l(_propertyLock);
-  
+
   UIImage *newImage;
   if (self.enabled == NO && _disabledImage) {
     newImage = _disabledImage;
@@ -170,9 +182,10 @@
   } else {
     newTitle = _normalAttributedTitle;
   }
-  
+
   if ((_titleNode != nil || newTitle.length > 0) && newTitle != self.titleNode.attributedString) {
     _titleNode.attributedString = newTitle;
+    self.accessibilityLabel = _titleNode.accessibilityLabel;
     [self setNeedsLayout];
   }
 }
@@ -234,51 +247,54 @@
 
 - (ASVerticalAlignment)contentVerticalAlignment
 {
-    ASDN::MutexLocker l(_propertyLock);
-    return _contentVerticalAlignment;
+  ASDN::MutexLocker l(_propertyLock);
+  return _contentVerticalAlignment;
 }
 
 - (void)setContentVerticalAlignment:(ASVerticalAlignment)contentVerticalAlignment
 {
-    ASDN::MutexLocker l(_propertyLock);
-    _contentVerticalAlignment = contentVerticalAlignment;
+  ASDN::MutexLocker l(_propertyLock);
+  _contentVerticalAlignment = contentVerticalAlignment;
 }
 
 - (ASHorizontalAlignment)contentHorizontalAlignment
 {
-    ASDN::MutexLocker l(_propertyLock);
-    return _contentHorizontalAlignment;
+  ASDN::MutexLocker l(_propertyLock);
+  return _contentHorizontalAlignment;
 }
 
 - (void)setContentHorizontalAlignment:(ASHorizontalAlignment)contentHorizontalAlignment
 {
-    ASDN::MutexLocker l(_propertyLock);
-    _contentHorizontalAlignment = contentHorizontalAlignment;
+  ASDN::MutexLocker l(_propertyLock);
+  _contentHorizontalAlignment = contentHorizontalAlignment;
 }
 
 - (UIEdgeInsets)contentEdgeInsets
 {
-    ASDN::MutexLocker l(_propertyLock);
-    return _contentEdgeInsets;
+  ASDN::MutexLocker l(_propertyLock);
+  return _contentEdgeInsets;
 }
 
 - (void)setContentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
 {
-    ASDN::MutexLocker l(_propertyLock);
-    _contentEdgeInsets = contentEdgeInsets;
+  ASDN::MutexLocker l(_propertyLock);
+  _contentEdgeInsets = contentEdgeInsets;
 }
 
+
+#if TARGET_OS_IOS
 - (void)setTitle:(NSString *)title withFont:(UIFont *)font withColor:(UIColor *)color forState:(ASControlState)state
 {
   NSDictionary *attributes = @{
-                               NSFontAttributeName: font ? font :[UIFont systemFontOfSize:[UIFont buttonFontSize]],
-                               NSForegroundColorAttributeName : color ? color : [UIColor blackColor]
+                               NSFontAttributeName: font ? : [UIFont systemFontOfSize:[UIFont buttonFontSize]],
+                               NSForegroundColorAttributeName : color ? : [UIColor blackColor]
                                };
     
   NSAttributedString *string = [[NSAttributedString alloc] initWithString:title
                                                                attributes:attributes];
   [self setAttributedTitle:string forState:state];
 }
+#endif
 
 - (NSAttributedString *)attributedTitleForState:(ASControlState)state
 {
@@ -331,6 +347,7 @@
     default:
       break;
   }
+
   [self updateTitle];
 }
 

@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASCellNode.h
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import <AsyncDisplayKit/ASDisplayNode.h>
 
@@ -14,9 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NSUInteger ASCellNodeAnimation;
 
-typedef enum : NSUInteger {
-  /** 
-   * Indicates a cell has just became visible 
+typedef NS_ENUM(NSUInteger, ASCellNodeVisibilityEvent) {
+  /**
+   * Indicates a cell has just became visible
    */
   ASCellNodeVisibilityEventVisible,
   /**
@@ -26,14 +28,26 @@ typedef enum : NSUInteger {
    * Use CGRectIntersect between cellFrame and scrollView.bounds to get this rectangle
    */
   ASCellNodeVisibilityEventVisibleRectChanged,
-  /** 
-   * Indicates a cell is no longer visible 
+  /**
+   * Indicates a cell is no longer visible
    */
   ASCellNodeVisibilityEventInvisible,
-} ASCellNodeVisibilityEvent;
+  /**
+   * Indicates user has started dragging the visible cell
+   */
+  ASCellNodeVisibilityEventWillBeginDragging,
+  /**
+   * Indicates user has ended dragging the visible cell
+   */
+  ASCellNodeVisibilityEventDidEndDragging,
+};
 
 /**
  * Generic cell node.  Subclass this instead of `ASDisplayNode` to use with `ASTableView` and `ASCollectionView`.
+ 
+ * @note When a cell node is contained inside a collection view (or table view),
+ * calling `-setNeedsLayout` will also notify the collection on the main thread
+ * so that the collection can update its item layout if the cell's size changed.
  */
 @interface ASCellNode : ASDisplayNode
 
@@ -51,7 +65,7 @@ typedef enum : NSUInteger {
  *
  * With this property set to YES, the main thread will be blocked until display is complete for
  * the cell.  This is more similar to UIKit, and in fact makes AsyncDisplayKit scrolling visually
- * indistinguishible from UIKit's, except being faster.
+ * indistinguishable from UIKit's, except being faster.
  *
  * Using this option does not eliminate all of the performance advantages of AsyncDisplayKit.
  * Normally, a cell has been preloading and is almost done when it reaches the screen, so the
@@ -66,12 +80,12 @@ typedef enum : NSUInteger {
 //@property (atomic, retain) UIColor *backgroundColor;
 @property (nonatomic) UITableViewCellSelectionStyle selectionStyle;
 
-/*
+/**
  * A Boolean value that indicates whether the node is selected.
  */
 @property (nonatomic, assign) BOOL selected;
 
-/*
+/**
  * A Boolean value that indicates whether the node is highlighted.
  */
 @property (nonatomic, assign) BOOL highlighted;
@@ -86,24 +100,13 @@ typedef enum : NSUInteger {
 - (void)touchesCancelled:(nullable NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event ASDISPLAYNODE_REQUIRES_SUPER;
 
 /**
- * Marks the node as needing layout. Convenience for use whether the view / layer is loaded or not.
- *
- * If this node was measured, calling this method triggers an internal relayout: the calculated layout is invalidated,
- * and the supernode is notified or (if this node is the root one) a full measurement pass is executed using the old constrained size.
- * The delegate will then be notified on main thread.
- *
- * This method can be called inside of an animation block (to animate all of the layout changes).
- */
-- (void)setNeedsLayout;
-
-/**
  * @abstract Initializes a cell with a given view controller block.
  *
  * @param viewControllerBlock The block that will be used to create the backing view controller.
  * @param didLoadBlock The block that will be called after the view controller's view is loaded.
  *
  * @return An ASCellNode created using the root view of the view controller provided by the viewControllerBlock.
- * The view controller's root view is resized to match the calcuated size produced during layout.
+ * The view controller's root view is resized to match the calculated size produced during layout.
  *
  */
 - (instancetype)initWithViewControllerBlock:(ASDisplayNodeViewControllerBlock)viewControllerBlock didLoadBlock:(nullable ASDisplayNodeDidLoadBlock)didLoadBlock;

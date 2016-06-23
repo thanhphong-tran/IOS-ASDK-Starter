@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASEditableTextNode.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASEditableTextNode.h"
 
@@ -12,7 +14,6 @@
 
 #import "ASDisplayNode+Subclasses.h"
 #import "ASEqualityHelpers.h"
-#import "ASTextKitHelpers.h"
 #import "ASTextNodeWordKerner.h"
 #import "ASThread.h"
 
@@ -37,6 +38,8 @@
 
 @implementation ASPanningOverriddenUITextView
 
+#if TARGET_OS_IOS
+ // tvOS doesn't support self.scrollsToTop
 - (BOOL)scrollEnabled
 {
   return _shouldBlockPanGesture;
@@ -45,8 +48,11 @@
 - (void)setScrollEnabled:(BOOL)scrollEnabled
 {
   _shouldBlockPanGesture = !scrollEnabled;
+  self.scrollsToTop = scrollEnabled;
+
   [super setScrollEnabled:YES];
 }
+#endif
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
@@ -94,20 +100,28 @@
 #pragma mark - NSObject Overrides
 - (instancetype)init
 {
+  return [self initWithTextKitComponents:[ASTextKitComponents componentsWithAttributedSeedString:nil textContainerSize:CGSizeZero]
+            placeholderTextKitComponents:[ASTextKitComponents componentsWithAttributedSeedString:nil textContainerSize:CGSizeZero]];
+}
+
+- (instancetype)initWithTextKitComponents:(ASTextKitComponents *)textKitComponents
+             placeholderTextKitComponents:(ASTextKitComponents *)placeholderTextKitComponents
+{
   if (!(self = [super init]))
     return nil;
 
   _displayingPlaceholder = YES;
+  _scrollEnabled = YES;
 
   // Create the scaffolding for the text view.
-  _textKitComponents = [ASTextKitComponents componentsWithAttributedSeedString:nil textContainerSize:CGSizeZero];
+  _textKitComponents = textKitComponents;
   _textKitComponents.layoutManager.delegate = self;
   _wordKerner = [[ASTextNodeWordKerner alloc] init];
   _returnKeyType = UIReturnKeyDefault;
   _textContainerInset = UIEdgeInsetsZero;
   
   // Create the placeholder scaffolding.
-  _placeholderTextKitComponents = [ASTextKitComponents componentsWithAttributedSeedString:nil textContainerSize:CGSizeZero];
+  _placeholderTextKitComponents = placeholderTextKitComponents;
   _placeholderTextKitComponents.layoutManager.delegate = self;
 
   return self;
@@ -161,7 +175,7 @@
 
   // Create and configure our text view.
   _textKitComponents.textView = self.textView;
-  //_textKitComponents.textView = NO; // Unfortunately there's a bug here with iOS 7 DP5 that causes the text-view to only be one line high when scrollEnabled is NO. rdar://14729288
+  _textKitComponents.textView.scrollEnabled = _scrollEnabled;
   _textKitComponents.textView.delegate = self;
   #if TARGET_OS_IOS
   _textKitComponents.textView.editable = YES;
@@ -178,8 +192,9 @@
 {
   ASTextKitComponents *displayedComponents = [self isDisplayingPlaceholder] ? _placeholderTextKitComponents : _textKitComponents;
   CGSize textSize = [displayedComponents sizeForConstrainedWidth:constrainedSize.width];
-  textSize = ceilSizeValue(textSize);
-  return CGSizeMake(constrainedSize.width, fminf(textSize.height, constrainedSize.height));
+  CGFloat width = ceilf(textSize.width + _textContainerInset.left + _textContainerInset.right);
+  CGFloat height = ceilf(textSize.height + _textContainerInset.top + _textContainerInset.bottom);
+  return CGSizeMake(fminf(width, constrainedSize.width), fminf(height, constrainedSize.height));
 }
 
 - (void)layout
@@ -309,7 +324,7 @@
   if (ASObjectIsEqual(_placeholderTextKitComponents.textStorage, attributedPlaceholderText))
     return;
 
-  [_placeholderTextKitComponents.textStorage setAttributedString:attributedPlaceholderText ?: [[NSAttributedString alloc] initWithString:@""]];
+  [_placeholderTextKitComponents.textStorage setAttributedString:attributedPlaceholderText ? : [[NSAttributedString alloc] initWithString:@""]];
   _textKitComponents.textView.accessibilityHint = attributedPlaceholderText.string;
 }
 
@@ -332,7 +347,7 @@
 
   // If we (_cmd) are called while the text view itself is updating (-textViewDidUpdate:), you cannot update the text storage and expect perfect propagation to the text view.
   // Thus, we always update the textview directly if it's been created already.
-  if (ASObjectIsEqual((_textKitComponents.textView.attributedText ?: _textKitComponents.textStorage), attributedText))
+  if (ASObjectIsEqual((_textKitComponents.textView.attributedText ? : _textKitComponents.textStorage), attributedText))
     return;
 
   // If the cursor isn't at the end of the text, we need to preserve the selected range to avoid moving the cursor.

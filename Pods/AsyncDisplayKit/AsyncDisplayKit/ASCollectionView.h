@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASCollectionView.h
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import <UIKit/UIKit.h>
 
@@ -13,13 +15,12 @@
 #import <AsyncDisplayKit/ASBaseDefines.h>
 #import <AsyncDisplayKit/ASBatchContext.h>
 #import <AsyncDisplayKit/ASCollectionViewFlowLayoutInspector.h>
+#import <AsyncDisplayKit/ASCollectionViewLayoutFacilitatorProtocol.h>
 
 @class ASCellNode;
 @class ASCollectionNode;
 @protocol ASCollectionDataSource;
 @protocol ASCollectionDelegate;
-@protocol ASCollectionViewLayoutInspecting;
-@protocol ASCollectionViewLayoutFacilitatorProtocol;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -77,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Tuning parameters for a range type in the specified mode.
  *
- * @param rangeMode The range mode to get the runing parameters for.
+ * @param rangeMode The range mode to get the running parameters for.
  * @param rangeType The range type to get the tuning parameters for.
  *
  * @returns A tuning parameter value for the given range type in the given mode.
@@ -88,10 +89,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (ASRangeTuningParameters)tuningParametersForRangeMode:(ASLayoutRangeMode)rangeMode rangeType:(ASLayoutRangeType)rangeType;
 
 /**
- * Set the tuning parameters for a range type in the specigied mode.
+ * Set the tuning parameters for a range type in the specified mode.
  *
  * @param tuningParameters The tuning parameters to store for a range type.
- * @param rangeMode The range mode to set the runing parameters for.
+ * @param rangeMode The range mode to set the running parameters for.
  * @param rangeType The range type to set the tuning parameters for.
  *
  * @see ASLayoutRangeMode
@@ -164,6 +165,12 @@ NS_ASSUME_NONNULL_BEGIN
  * while all the cells load.
  */
 - (void)reloadDataImmediately;
+
+/**
+ * Triggers a relayout of all nodes.
+ *
+ */
+- (void)relayoutItems;
 
 /**
  *  Blocks execution of the main thread until all section and row updates are committed. This method must be called from the main thread.
@@ -343,7 +350,7 @@ NS_ASSUME_NONNULL_BEGIN
  * This is a node-based UICollectionViewDataSource.
  */
 #define ASCollectionViewDataSource ASCollectionDataSource
-@protocol ASCollectionDataSource <ASCommonCollectionViewDataSource, NSObject>
+@protocol ASCollectionDataSource <ASCommonCollectionViewDataSource>
 
 @optional
 
@@ -396,7 +403,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Indicator to lock the data source for data fetching in async mode.
- * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistence or exception
+ * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistency or exception
  * due to the data access in async mode.
  *
  * @param collectionView The sender.
@@ -405,7 +412,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Indicator to unlock the data source for data fetching in async mode.
- * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistence or exception
+ * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistency or exception
  * due to the data access in async mode.
  *
  * @param collectionView The sender.

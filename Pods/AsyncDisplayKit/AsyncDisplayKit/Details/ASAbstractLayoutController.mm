@@ -1,10 +1,12 @@
-/* Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASAbstractLayoutController.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASAbstractLayoutController.h"
 #import "ASAssert.h"
@@ -33,24 +35,24 @@ extern BOOL ASRangeTuningParametersEqualToRangeTuningParameters(ASRangeTuningPar
   
   _tuningParameters = std::vector<std::vector<ASRangeTuningParameters>> (ASLayoutRangeModeCount, std::vector<ASRangeTuningParameters> (ASLayoutRangeTypeCount));
   
+  _tuningParameters[ASLayoutRangeModeFull][ASLayoutRangeTypeDisplay] = {
+    .leadingBufferScreenfuls = 1.0,
+    .trailingBufferScreenfuls = 0.5
+  };
+  _tuningParameters[ASLayoutRangeModeFull][ASLayoutRangeTypeFetchData] = {
+    .leadingBufferScreenfuls = 2.5,
+    .trailingBufferScreenfuls = 1.5
+  };
+  
   _tuningParameters[ASLayoutRangeModeMinimum][ASLayoutRangeTypeDisplay] = {
     .leadingBufferScreenfuls = 0.25,
     .trailingBufferScreenfuls = 0.25
   };
   _tuningParameters[ASLayoutRangeModeMinimum][ASLayoutRangeTypeFetchData] = {
-    .leadingBufferScreenfuls = 1,
-    .trailingBufferScreenfuls = 1
+    .leadingBufferScreenfuls = 0.5,
+    .trailingBufferScreenfuls = 0.25
   };
 
-  _tuningParameters[ASLayoutRangeModeFull][ASLayoutRangeTypeDisplay] = {
-    .leadingBufferScreenfuls = 1.5,
-    .trailingBufferScreenfuls = 0.75
-  };
-  _tuningParameters[ASLayoutRangeModeFull][ASLayoutRangeTypeFetchData] = {
-    .leadingBufferScreenfuls = 3,
-    .trailingBufferScreenfuls = 2
-  };
-  
   _tuningParameters[ASLayoutRangeModeVisibleOnly][ASLayoutRangeTypeDisplay] = {
     .leadingBufferScreenfuls = 0,
     .trailingBufferScreenfuls = 0

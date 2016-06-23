@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASDisplayNode.h
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import <UIKit/UIKit.h>
 
@@ -41,6 +43,11 @@ typedef void (^ASDisplayNodeDidLoadBlock)(ASDisplayNode * _Nonnull node);
  * ASDisplayNode will / did render node content in context.
  */
 typedef void (^ASDisplayNodeContextModifier)(_Nonnull CGContextRef context);
+
+/**
+ * ASDisplayNode layout spec block. This block can be used instead of implementing layoutSpecThatFits: in subclass
+ */
+typedef ASLayoutSpec * _Nonnull(^ASLayoutSpecBlock)(ASDisplayNode * _Nonnull node, ASSizeRange constrainedSize);
 
 /**
  Interface state is available on ASDisplayNode and ASViewController, and
@@ -177,7 +184,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @warning The first access to it must be on the main thread, and should only be used on the main thread thereafter as 
  * well.
  */
-@property (nonatomic, readonly, retain) UIView *view;
+@property (nonatomic, readonly, strong) UIView *view;
 
 /** 
  * @abstract Returns whether a node's backing view or layer is loaded.
@@ -202,7 +209,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @warning The first access to it must be on the main thread, and should only be used on the main thread thereafter as 
  * well.
  */
-@property (nonatomic, readonly, retain) CALayer * _Nonnull layer;
+@property (nonatomic, readonly, strong) CALayer * _Nonnull layer;
 
 /**
  * @abstract Returns the Interface State of the node.
@@ -251,6 +258,21 @@ NS_ASSUME_NONNULL_BEGIN
  * @see [ASDisplayNode(Subclassing) calculateLayoutThatFits:]
  */
 - (ASLayout *)measureWithSizeRange:(ASSizeRange)constrainedSize;
+
+
+/**
+ * @abstract Provides a way to declare a block to provide an ASLayoutSpec without having to subclass ASDisplayNode and
+ * implement layoutSpecThatFits:
+ *
+ * @return A block that takes a constrainedSize ASSizeRange argument, and must return an ASLayoutSpec that includes all
+ * of the subnodes to position in the layout. This input-output relationship is identical to the subclass override
+ * method -layoutSpecThatFits:
+ *
+ * @warning Subclasses that implement -layoutSpecThatFits: must not also use .layoutSpecBlock. Doing so will trigger
+ * an exception. A future version of the framework may support using both, calling them serially, with the
+ * .layoutSpecBlock superseding any values set by the method override.
+ */
+@property (nonatomic, readwrite, copy, nullable) ASLayoutSpecBlock layoutSpecBlock;
 
 /** 
  * @abstract Return the calculated size.
@@ -351,7 +373,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 
  * @abstract The receiver's immediate subnodes.
  */
-@property (nonatomic, readonly, retain) NSArray<ASDisplayNode *> *subnodes;
+@property (nonatomic, readonly, copy) NSArray<ASDisplayNode *> *subnodes;
 
 /** 
  * @abstract The receiver's supernode.
@@ -427,6 +449,11 @@ NS_ASSUME_NONNULL_BEGIN
  * layer will be automatically displayed.
  */
 @property (nonatomic, assign) BOOL displaySuspended;
+
+/**
+ * @abstract Whether size changes should be animated. Default to YES.
+ */
+@property (nonatomic, assign) BOOL shouldAnimateSizeChanges;
 
 /** 
  * @abstract Prevent the node and its descendants' layer from displaying.
@@ -617,7 +644,7 @@ NS_ASSUME_NONNULL_END
  */
 - (void)setNeedsLayout;
 
-@property (atomic, retain, nullable) id contents;                           // default=nil
+@property (atomic, strong, nullable) id contents;                           // default=nil
 @property (atomic, assign)           BOOL clipsToBounds;                    // default==NO
 @property (atomic, getter=isOpaque)  BOOL opaque;                           // default==YES
 
@@ -645,9 +672,9 @@ NS_ASSUME_NONNULL_END
  * @discussion In contrast to UIView, setting a transparent color will not set opaque = NO.
  * This only affects nodes that implement +drawRect like ASTextNode.
 */
-@property (atomic, retain, nullable) UIColor *backgroundColor;              // default=nil
+@property (atomic, strong, nullable) UIColor *backgroundColor;              // default=nil
 
-@property (atomic, retain, null_resettable)    UIColor *tintColor;          // default=Blue
+@property (atomic, strong, null_resettable)    UIColor *tintColor;          // default=Blue
 - (void)tintColorDidChange;     // Notifies the node when the tintColor has changed.
 
 /**
@@ -690,20 +717,30 @@ NS_ASSUME_NONNULL_END
 - (nullable UIView *)preferredFocusedView;
 #endif
 
+@end
+
+@interface ASDisplayNode (UIViewBridgeAccessibility)
+
 // Accessibility support
-@property (atomic, assign)           BOOL isAccessibilityElement;
-@property (nullable, atomic, copy)   NSString *accessibilityLabel;
-@property (nullable, atomic, copy)   NSString *accessibilityHint;
-@property (nullable, atomic, copy)   NSString *accessibilityValue;
-@property (atomic, assign)           UIAccessibilityTraits accessibilityTraits;
-@property (atomic, assign)           CGRect accessibilityFrame;
-@property (nullable, atomic, retain) NSString *accessibilityLanguage;
-@property (atomic, assign)           BOOL accessibilityElementsHidden;
-@property (atomic, assign)           BOOL accessibilityViewIsModal;
-@property (atomic, assign)           BOOL shouldGroupAccessibilityChildren;
+@property (nonatomic, assign)           BOOL isAccessibilityElement;
+@property (nonatomic, copy, nullable)   NSString *accessibilityLabel;
+@property (nonatomic, copy, nullable)   NSString *accessibilityHint;
+@property (nonatomic, copy, nullable)   NSString *accessibilityValue;
+@property (nonatomic, assign)           UIAccessibilityTraits accessibilityTraits;
+@property (nonatomic, assign)           CGRect accessibilityFrame;
+@property (nonatomic, copy, nullable)   UIBezierPath *accessibilityPath;
+@property (nonatomic, assign)           CGPoint accessibilityActivationPoint;
+@property (nonatomic, copy, nullable)   NSString *accessibilityLanguage;
+@property (nonatomic, assign)           BOOL accessibilityElementsHidden;
+@property (nonatomic, assign)           BOOL accessibilityViewIsModal;
+@property (nonatomic, assign)           BOOL shouldGroupAccessibilityChildren;
+@property (nonatomic, assign)           UIAccessibilityNavigationStyle accessibilityNavigationStyle;
+#if TARGET_OS_TV
+@property(nonatomic, copy, nullable) 	NSArray *accessibilityHeaderElements;
+#endif
 
 // Accessibility identification support
-@property (nullable, nonatomic, copy) NSString *accessibilityIdentifier;
+@property (nonatomic, copy, nullable)   NSString *accessibilityIdentifier;
 
 @end
 

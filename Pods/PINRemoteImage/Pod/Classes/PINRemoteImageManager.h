@@ -7,11 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
+#if PIN_TARGET_IOS
 #import <UIKit/UIKit.h>
-#else
+#elif PIN_TARGET_MAC
 #import <Cocoa/Cocoa.h>
 #endif
+
+@protocol PINRemoteImageManagerAlternateRepresentationProvider;
 
 #import "PINRemoteImageManagerResult.h"
 
@@ -32,6 +35,8 @@ typedef NS_ENUM(NSUInteger, PINRemoteImageManagerError) {
     PINRemoteImageManagerErrorFailedToProcessImage = 3,
     /** The image in the cache was invalid */
     PINRemoteImageManagerErrorInvalidItemInCache = 4,
+    /** The image at the URL was empty */
+    PINRemoteImageManagerErrorImageEmpty = 5,
 };
 
 /**
@@ -40,8 +45,8 @@ typedef NS_ENUM(NSUInteger, PINRemoteImageManagerError) {
 typedef NS_OPTIONS(NSUInteger, PINRemoteImageManagerDownloadOptions) {
     /** Download and process with default options (no other options set) */
     PINRemoteImageManagerDownloadOptionsNone = 0,
-    /** Regardless of the image type downloaded, return UIImages and *not* FLAnimatedImage */
-    PINRemoteImageManagerDownloadOptionsIgnoreGIFs = 1,
+    /** Set to disallow any alternate representations such as FLAnimatedImage */
+    PINRemoteImageManagerDisallowAlternateRepresentations = 1,
     /** Skip decoding the image before returning. This means smaller images returned, but images will be decoded on the main thread when set on an image view */
     PINRemoteImageManagerDownloadOptionsSkipDecode = 1 << 1,
     /** Skip the early check of the memory cache */
@@ -120,16 +125,25 @@ typedef void(^PINRemoteImageManagerAuthenticationChallenge)(NSURLSessionTask * _
  */
 typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int64_t totalBytes);
 
+/** An image downloading, processing and caching manager. It uses the concept of download and processing tasks to ensure that even if multiple calls to download or process an image are made, it only occurs one time (unless an item is no longer in the cache). PINRemoteImageManager is backed by GCD and safe to access from multiple threads simultaneously. It ensures that images are decoded off the main thread so that animation performance isn't affected. None of its exposed methods allow for synchronous access. However, it is optimized to call completions on the calling thread if an item is in its memory cache. **/
 @interface PINRemoteImageManager : NSObject
 
 @property (nonatomic, readonly, nonnull) PINCache * cache;
 
 /**
- Create and return a PINRemoteImageManager created with the specified configuration. If configuration is nil, [NSURLSessionConfiguration defaultConfiguration] is used. You specify a custom configuration if you need to configure timeout values, cookie policies, additional HTTP headers, etc.
+ Create and return a PINRemoteImageManager created with the specified configuration. If configuration is nil, [NSURLSessionConfiguration defaultConfiguration] is used. Specify a custom configuration if you need to configure timeout values, cookie policies, additional HTTP headers, etc.
  @param configuration The configuration used to create the PINRemoteImageManager.
  @return A PINRemoteImageManager with the specified configuration.
  */
 - (nonnull instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)configuration;
+
+/**
+ Create and return a PINRemoteImageManager with the specified configuration and alternative representation delegate. If configuration is nil, [NSURLSessionConfiguration defaultConfiguration] is used. Specify a custom configuration if you need to configure timeout values, cookie policies, additional HTTP headers, etc. If alternativeRepresentationProvider is nil, the default is used (and supports FLAnimatedImage).
+ @param configuration The configuration used to create the PINRemoteImageManager.
+ @param alternativeRepDelegate a delegate which conforms to the PINRemoteImageManagerAlternateRepresentationProvider protocol. Provide a delegate if you want to have non image results. @see PINAlternativeRepresentationDelaget for an example.
+ @return A PINRemoteImageManager with the specified configuration.
+ */
+- (nonnull instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)configuration alternativeRepresentationProvider:(nullable id <PINRemoteImageManagerAlternateRepresentationProvider>)alternateRepDelegate NS_DESIGNATED_INITIALIZER;
 
 /**
  Get the shared instance of PINRemoteImageManager
@@ -152,12 +166,11 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
 - (nonnull PINCache *)defaultImageCache;
 
 /**
- Set the Authentication Challenge Block
- @see PINRemoteImageManagerAuthenticationChallenge
+ Set the Authentication Challenge Block.
  
  @param challengeBlock A PINRemoteImageManagerAuthenticationChallenge block.
  */
-- (void)setAuthenticationChallenge:(nullable PINRemoteImageManagerAuthenticationChallenge)aChallenge;
+- (void)setAuthenticationChallenge:(nullable PINRemoteImageManagerAuthenticationChallenge)challengeBlock;
 
 /**
  Set the minimum BPS to download the highest quality image in a set.
@@ -207,7 +220,7 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
                                completion:(nullable dispatch_block_t)completion;
 
 /**
- Set the estimated time remaining to download threshold at which to generate progressive images. Progressive images previews will only be generated if the estimated remaining time on a download is greater than estimatedTimeRemainingThreshold. If estimatedTimeRemainingThreshold is less than zero, this check is skipped.
+ Set the estimated time remaining to download threshold at which to generate progressive images. Progressive images previews will only be generated if the estimated remaining time on a download is greater than estimatedTimeRemainingThreshold. If estimatedTimeRemainingThreshold is less than or equal to zero, this check is skipped.
  
  @param estimatedRemainingTimeThreshold The estimated remaining time threshold used to decide to skip progressive rendering. Defaults to 0.1.
  @param completion Completion to be called once estimatedTimeRemainingTimeThreshold is set.
@@ -234,7 +247,7 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
                              completion:(nullable dispatch_block_t)completion;
 
 /**
- Sets the maximum size of an image that PINRemoteImage will blur. If the image is too large, blurring is skipped
+ Sets the maximum size of an image that PINRemoteImage will render progessively. If the image is too large, progressive rendering is skipped.
  
  @param maxProgressiveRenderSize A CGSize which indicates the max size PINRemoteImage will render a progressive image. If an image is larger in either dimension, progressive rendering will be skipped
  @param completion Completion to be called once maxProgressiveRenderSize is set.
@@ -247,7 +260,7 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
  
  @param url NSURL where the image to prefetch resides.
  */
-- (void)prefetchImageWithURL:(nonnull NSURL *)url;
+- (nullable NSUUID *)prefetchImageWithURL:(nonnull NSURL *)url;
 
 /**
  Prefetch an image at the given URL with given options.
@@ -255,14 +268,14 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
  @param url NSURL where the image to prefetch resides.
  @param options PINRemoteImageManagerDownloadOptions options with which to pefetch the image.
  */
-- (void)prefetchImageWithURL:(nonnull NSURL *)url options:(PINRemoteImageManagerDownloadOptions)options;
+- (nullable NSUUID *)prefetchImageWithURL:(nonnull NSURL *)url options:(PINRemoteImageManagerDownloadOptions)options;
 
 /**
  Prefetch images at the given URLs.
  
  @param urls An array of NSURLs where the images to prefetch reside.
  */
-- (void)prefetchImagesWithURLs:(nonnull NSArray <NSURL *> *)urls;
+- (nonnull NSArray<NSUUID *> *)prefetchImagesWithURLs:(nonnull NSArray <NSURL *> *)urls;
 
 /**
  Prefetch images at the given URLs with given options.
@@ -270,7 +283,7 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
  @param urls An array of NSURLs where the images to prefetch reside.
  @param options PINRemoteImageManagerDownloadOptions options with which to pefetch the image.
  */
-- (void)prefetchImagesWithURLs:(nonnull NSArray <NSURL *> *)urls options:(PINRemoteImageManagerDownloadOptions)options;;
+- (nonnull NSArray<NSUUID *> *)prefetchImagesWithURLs:(nonnull NSArray <NSURL *> *)urls options:(PINRemoteImageManagerDownloadOptions)options;
 
 /**
  Download or retrieve from cache the image found at the url. All completions are called on an arbitrary callback queue unless called on the main thread and the result is in the memory cache (this is an optimization to allow synchronous results for the UI when an object is cached in memory).
@@ -406,6 +419,10 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
 
 /**
  @see imageFromCacheWithCacheKey:options:completion: instead
+ @deprecated
+ 
+ @param cacheKey NSString key to look up image in the cache.
+ @param completion PINRemoteImageManagerImageCompletion block to call when image has been fetched from the cache.
  */
 - (void)imageFromCacheWithCacheKey:(nonnull NSString *)cacheKey completion:(nonnull PINRemoteImageManagerImageCompletion)completion __attribute__((deprecated));
 
@@ -414,7 +431,7 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
  @see cacheKeyForURL:processorKey:
  
  @param cacheKey NSString key to look up image in the cache.
- @param options optoins will be used to determine if the cached image should be decompressed or FLAnimatedImages should be returned.
+ @param options options will be used to determine if the cached image should be decompressed or FLAnimatedImages should be returned.
  @param completion PINRemoteImageManagerImageCompletion block to call when image has been fetched from the cache.
  */
 - (void)imageFromCacheWithCacheKey:(nonnull NSString *)cacheKey options:(PINRemoteImageManagerDownloadOptions)options completion:(nonnull PINRemoteImageManagerImageCompletion)completion;
@@ -424,7 +441,7 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
  @see cacheKeyForURL:processorKey:
  
  @param cacheKey NSString key to look up image in the cache.
- @param options optoins will be used to determine if the cached image should be decompressed or FLAnimatedImages should be returned.
+ @param options options will be used to determine if the cached image should be decompressed or FLAnimatedImages should be returned.
  
  @return A PINRemoteImageManagerResult
  */
@@ -452,6 +469,6 @@ typedef void(^PINRemoteImageManagerProgressDownload)(int64_t completedBytes, int
  * @param progressImageCallback a PINRemoteImageManagerImageCompletion block to be called with a progress update
  * @param UUID NSUUID of the task to set the priority on.
  */
-- (void)setProgressImageCallback:(nullable PINRemoteImageManagerImageCompletion)progressImageBlock ofTaskWithUUID:(nonnull NSUUID *)UUID;
+- (void)setProgressImageCallback:(nullable PINRemoteImageManagerImageCompletion)progressImageCallback ofTaskWithUUID:(nonnull NSUUID *)UUID;
 
 @end

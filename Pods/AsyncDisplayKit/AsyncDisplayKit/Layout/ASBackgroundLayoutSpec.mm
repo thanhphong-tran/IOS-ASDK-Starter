@@ -1,12 +1,12 @@
-/*
- *  Copyright (c) 2014-present, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- *
- */
+//
+//  ASBackgroundLayoutSpec.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASBackgroundLayoutSpec.h"
 
@@ -55,7 +55,10 @@ static NSString * const kBackgroundChildKey = @"kBackgroundChildKey";
   contentsLayout.position = CGPointZero;
   [sublayouts addObject:contentsLayout];
 
-  return [ASLayout layoutWithLayoutableObject:self size:contentsLayout.size sublayouts:sublayouts];
+  return [ASLayout layoutWithLayoutableObject:self
+                         constrainedSizeRange:constrainedSize
+                                         size:contentsLayout.size
+                                   sublayouts:sublayouts];
 }
 
 - (void)setBackground:(id<ASLayoutable>)background
@@ -66,17 +69,6 @@ static NSString * const kBackgroundChildKey = @"kBackgroundChildKey";
 - (id<ASLayoutable>)background
 {
   return [super childForIdentifier:kBackgroundChildKey];
-}
-
-- (void)setChildren:(NSArray *)children
-{
-  ASDisplayNodeAssert(NO, @"not supported by this layout spec");
-}
-
-- (NSArray *)children
-{
-  ASDisplayNodeAssert(NO, @"not supported by this layout spec");
-  return nil;
 }
 
 @end

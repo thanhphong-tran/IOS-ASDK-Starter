@@ -1,10 +1,12 @@
-/* Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+//
+//  ASTableView.h
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import <UIKit/UIKit.h>
 #import <AsyncDisplayKit/ASRangeController.h>
@@ -81,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Tuning parameters for a range type in the specified mode.
  *
- * @param rangeMode The range mode to get the runing parameters for.
+ * @param rangeMode The range mode to get the running parameters for.
  * @param rangeType The range type to get the tuning parameters for.
  *
  * @returns A tuning parameter value for the given range type in the given mode.
@@ -92,10 +94,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (ASRangeTuningParameters)tuningParametersForRangeMode:(ASLayoutRangeMode)rangeMode rangeType:(ASLayoutRangeType)rangeType;
 
 /**
- * Set the tuning parameters for a range type in the specigied mode.
+ * Set the tuning parameters for a range type in the specified mode.
  *
  * @param tuningParameters The tuning parameters to store for a range type.
- * @param rangeMode The range mode to set the runing parameters for.
+ * @param rangeMode The range mode to set the running parameters for.
  * @param rangeType The range type to set the tuning parameters for.
  *
  * @see ASLayoutRangeMode
@@ -135,6 +137,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reloadDataImmediately;
 
 /**
+ * Triggers a relayout of all nodes.
+ *
+ */
+- (void)relayoutItems;
+
+/**
  *  begins a batch of insert, delete reload and move operations. This method must be called from the main thread.
  */
 - (void)beginUpdates;
@@ -143,7 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Concludes a series of method calls that insert, delete, select, or reload rows and sections of the table view, with animation enabled and no completion block.
  *  You call this method to bracket a series of method calls that begins with beginUpdates and that consists of operations
  *  to insert, delete, select, and reload rows and sections of the table view. When you call endUpdates, ASTableView begins animating
- *  the operations simultaneously. This method is must be called from the main thread. It's important to remeber that the ASTableView will
+ *  the operations simultaneously. This method is must be called from the main thread. It's important to remember that the ASTableView will
  *  be processing the updates asynchronously after this call is completed.
  */
 - (void)endUpdates;
@@ -152,7 +160,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Concludes a series of method calls that insert, delete, select, or reload rows and sections of the table view.
  *  You call this method to bracket a series of method calls that begins with beginUpdates and that consists of operations 
  *  to insert, delete, select, and reload rows and sections of the table view. When you call endUpdates, ASTableView begins animating
- *  the operations simultaneously. This method is must be called from the main thread. It's important to remeber that the ASTableView will
+ *  the operations simultaneously. This method is must be called from the main thread. It's important to remember that the ASTableView will
  *  be processing the updates asynchronously after this call and are not guaranteed to be reflected in the ASTableView until
  *  the completion block is executed.
  *
@@ -285,9 +293,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Similar to -visibleCells.
  *
- * @returns an array containing the nodes being displayed on screen.
+ * @returns an array containing the cell nodes being displayed on screen.
  */
-- (NSArray<ASDisplayNode *> *)visibleNodes;
+- (NSArray<ASCellNode *> *)visibleNodes;
 
 /**
  * YES to automatically adjust the contentOffset when cells are inserted or deleted "before"
@@ -351,7 +359,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Indicator to lock the data source for data fetching in async mode.
- * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistence or exception
+ * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistency or exception
  * due to the data access in async mode.
  *
  * @param tableView The sender.
@@ -360,7 +368,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Indicator to unlock the data source for data fetching in asyn mode.
- * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistence or exception
+ * We should not update the data source until the data source has been unlocked. Otherwise, it will incur data inconsistency or exception
  * due to the data access in async mode.
  *
  * @param tableView The sender.

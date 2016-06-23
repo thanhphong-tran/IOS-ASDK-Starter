@@ -94,7 +94,9 @@
     ASInsetLayoutSpec *descriptionTextInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0) child:self.animalDescriptionTextNode];
     self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width, self.preferredFrameSize.height * (1.0/3.0));
     
-    CGFloat height = self.preferredFrameSize.height/3.0;
+//    CGFloat height = self.preferredFrameSize.height/3.0;
+    CGFloat height = [UIScreen mainScreen].bounds.size.height/3.0;
+
     descriptionTextInsetSpec.sizeRange = ASRelativeSizeRangeMake(
                                                 ASRelativeSizeMake(
                                                         ASRelativeDimensionMake(ASRelativeDimensionTypePercent, 1.0),

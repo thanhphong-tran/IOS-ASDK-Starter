@@ -1,12 +1,12 @@
-/*
- *  Copyright (c) 2014-present, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- *
- */
+//
+//  ASInternalHelpers.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASInternalHelpers.h"
 
@@ -34,19 +34,6 @@ BOOL ASSubclassOverridesClassSelector(Class superclass, Class subclass, SEL sele
   return (superclassIMP != subclassIMP);
 }
 
-static void ASDispatchOnceOnMainThread(dispatch_once_t *predicate, dispatch_block_t block)
-{
-  if (ASDisplayNodeThreadIsMain()) {
-    dispatch_once(predicate, block);
-  } else {
-    if (DISPATCH_EXPECT(*predicate == 0L, NO)) {
-      dispatch_sync(dispatch_get_main_queue(), ^{
-        dispatch_once(predicate, block);
-      });
-    }
-  }
-}
-
 void ASPerformBlockOnMainThread(void (^block)())
 {
   if (ASDisplayNodeThreadIsMain()) {
@@ -65,14 +52,26 @@ void ASPerformBlockOnBackgroundThread(void (^block)())
   }
 }
 
+void ASPerformBlockOnDeallocationQueue(void (^block)())
+{
+  static dispatch_queue_t queue;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    queue = dispatch_queue_create("org.AsyncDisplayKit.deallocationQueue", DISPATCH_QUEUE_SERIAL);
+  });
+  
+  dispatch_async(queue, block);
+}
+
 CGFloat ASScreenScale()
 {
-  static CGFloat _scale;
+  static CGFloat __scale = 0.0;
   static dispatch_once_t onceToken;
-  ASDispatchOnceOnMainThread(&onceToken, ^{
-    _scale = [UIScreen mainScreen].scale;
+  dispatch_once(&onceToken, ^{
+    ASDisplayNodeCAssertMainThread();
+    __scale = [[UIScreen mainScreen] scale];
   });
-  return _scale;
+  return __scale;
 }
 
 CGFloat ASFloorPixelValue(CGFloat f)

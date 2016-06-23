@@ -1,12 +1,12 @@
-/*
- *  Copyright (c) 2014-present, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- *
- */
+//
+//  ASDimension.mm
+//  AsyncDisplayKit
+//
+//  Copyright (c) 2014-present, Facebook, Inc.  All rights reserved.
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
 
 #import "ASDimension.h"
 #import "ASAssert.h"
@@ -100,7 +100,7 @@ struct _Range {
   {
   CGFloat newMin = MAX(min, other.min);
   CGFloat newMax = MIN(max, other.max);
-  if (!(newMin > newMax)) {
+  if (newMin <= newMax) {
     return {newMin, newMax};
   } else {
     // No intersection. If we're before the other range, return our max; otherwise our min.

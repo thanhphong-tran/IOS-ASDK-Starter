@@ -4,6 +4,6 @@
 # use_frameworks!
 
 target 'RainForestFinal' do
-  pod 'AsyncDisplayKit' #, path: '../OpenSource/AsyncDisplayKit'
+  pod 'AsyncDisplayKit', git: "git@github.com:facebook/AsyncDisplayKit.git", branch: "master" #, path: '../OpenSource/AsyncDisplayKit'
 end
 
