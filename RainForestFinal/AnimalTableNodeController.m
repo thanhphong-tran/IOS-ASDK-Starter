@@ -8,12 +8,14 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 @interface AnimalTableNodeController ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSMutableArray *animals;
+@property (nonatomic, strong) NSMutableArray <RainforestCardInfo *>*animals;
 @end
 
 @implementation AnimalTableNodeController
 
-- (instancetype)initWithAnimals:(NSArray *)animals
+#pragma mark - Lifecycle
+
+- (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *>*)animals
 {
     if (!(self = [super init])) { return nil; }
     
@@ -21,6 +23,8 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
     
     return self;
 }
+
+#pragma mark - UIViewController
 
 - (void)viewDidLoad
 {
@@ -42,7 +46,8 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
     self.tableView.frame = self.view.bounds;
 }
 
-#pragma mark ASTableNode DataSource
+#pragma mark - ASTableDataSource
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -68,11 +73,11 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
     return self.view.bounds.size.height;
 }
 
-#pragma mark ASTableNode Delegate
+#pragma mark - ASTableDelegate
 
 
 
-#pragma mark Helpers
+#pragma mark - Helpers
 
 //- (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block
 //{

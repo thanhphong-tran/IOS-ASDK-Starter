@@ -20,6 +20,8 @@
 
 @implementation CardNode
 
+#pragma mark - Lifecycle
+
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 {
     if (!(self = [super init])) { return nil; }
@@ -41,6 +43,7 @@
     self.animalImageNode.delegate = self;
     self.animalImageNode.placeholderFadeDuration = 0.15;
     self.animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
+    self.animalImageNode.shouldRenderProgressImages = YES;
 
     //Animal Name
     self.animalNameTextNode.attributedString = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
@@ -71,6 +74,8 @@
     return self;
 }
 
+#pragma mark - ASDisplayNode
+
 - (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
 {
     self.preferredFrameSize = [UIScreen mainScreen].bounds.size;
@@ -96,7 +101,7 @@
     return backgroundLayoutSpec;
 }
 
-#pragma mark ASNetworkImageNode Delegate
+#pragma mark - ASNetworkImageNodeDelegate
 
 - (void)imageNode:(ASNetworkImageNode *)imageNode didFailWithError:(NSError *)error
 {
@@ -108,8 +113,9 @@
     self.backgroundImageNode.image = image;
 }
 
-#pragma mark -- Interface State Callbacks
+#pragma mark - Interface Callbacks
 
+//#pragma mark Visible State
 //- (void)visibleStateDidChange:(BOOL)isVisible
 //{
 //    [super visibleStateDidChange:isVisible];
@@ -121,6 +127,7 @@
 //    }
 //}
 //
+//#pragma mark Display State
 //- (void)displayStateDidChange:(BOOL)inDisplayState
 //{
 //    [super displayStateDidChange:inDisplayState];
@@ -132,6 +139,7 @@
 //    }
 //}
 //
+//#pragma mark Load State
 //- (void)loadStateDidChange:(BOOL)inLoadState
 //{
 //    [super loadStateDidChange:inLoadState];

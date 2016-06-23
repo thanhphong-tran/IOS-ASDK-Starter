@@ -14,6 +14,8 @@
 
 @implementation ViewController
 
+#pragma mark - Lifecycle
+
 - (instancetype)init
 {
     if (!(self = [super init])) { return nil; }
@@ -30,6 +32,8 @@
     return self;
 }
 
+#pragma mark - UIViewController
+
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
@@ -43,7 +47,7 @@
     [self.view addSubnode:self.pagerNode];
 }
 
-#pragma mark ASPagerNode Datasource
+#pragma mark - ASPagerNode Datasource
 
 
 
