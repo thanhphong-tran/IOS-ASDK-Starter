@@ -1,15 +1,15 @@
 /*
-     File: UIImage+ImageEffects.m
+ File: UIImage+ImageEffects.m
  Abstract: This is a category of UIImage that adds methods to apply blur and tint effects to an image. This is the code you’ll want to look out to find out how to use vImage to efficiently calculate a blur.
-  Version: 1.0
- 
+ Version: 1.0
+
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
  terms, and your use, installation, modification or redistribution of
  this Apple software constitutes acceptance of these terms.  If you do
  not agree with these terms, please do not use, install, modify or
  redistribute this Apple software.
- 
+
  In consideration of your agreement to abide by the following terms, and
  subject to these terms, Apple grants you a personal, non-exclusive
  license, under Apple's copyrights in this original Apple software (the
@@ -25,13 +25,13 @@
  implied, are granted by Apple herein, including but not limited to any
  patent rights that may be infringed by your derivative works or by other
  works in which the Apple Software may be incorporated.
- 
+
  The Apple Software is provided by Apple on an "AS IS" basis.  APPLE
  MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
  THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS
  FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
  OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS.
- 
+
  IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL
  OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -40,24 +40,24 @@
  AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
- 
+
  Copyright (C) 2013 Apple Inc. All Rights Reserved.
- 
- 
+
+
  Copyright © 2013 Apple Inc. All rights reserved.
  WWDC 2013 License
- 
+
  NOTE: This Apple Software was supplied by Apple as part of a WWDC 2013
  Session. Please refer to the applicable WWDC 2013 Session for further
  information.
- 
+
  IMPORTANT: This Apple software is supplied to you by Apple Inc.
  ("Apple") in consideration of your agreement to the following terms, and
  your use, installation, modification or redistribution of this Apple
  software constitutes acceptance of these terms. If you do not agree with
  these terms, please do not use, install, modify or redistribute this
  Apple software.
- 
+
  In consideration of your agreement to abide by the following terms, and
  subject to these terms, Apple grants you a non-exclusive license, under
  Apple's copyrights in this original Apple software (the "Apple
@@ -73,13 +73,13 @@
  implied, are granted by Apple herein, including but not limited to any
  patent rights that may be infringed by your derivative works or by other
  works in which the Apple Software may be incorporated.
- 
+
  The Apple Software is provided by Apple on an "AS IS" basis. APPLE MAKES
  NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE
  IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR
  A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
  OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS.
- 
+
  IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL
  OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -88,7 +88,7 @@
  AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
- 
+
  EA1002
  5/3/2013
  */
@@ -116,28 +116,28 @@
   if (maskImage && !maskImage.CGImage) {
     return nil;
   }
-  
+
   @autoreleasepool {
-    
+
     CGRect imageRect = { CGPointZero, self.size };
     UIImage *effectImage = self;
-    
+
     BOOL hasBlur = blurRadius > __FLT_EPSILON__;
     BOOL hasSaturationChange = fabs(saturationDeltaFactor - 1.) > __FLT_EPSILON__;
-    
+
     if (hasBlur || hasSaturationChange) {
       UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
       CGContextRef effectInContext = UIGraphicsGetCurrentContext();
       CGContextScaleCTM(effectInContext, 1.0, -1.0);
       CGContextTranslateCTM(effectInContext, 0, -self.size.height);
       CGContextDrawImage(effectInContext, imageRect, self.CGImage);
-      
+
       vImage_Buffer effectInBuffer;
       effectInBuffer.data     = CGBitmapContextGetData(effectInContext);
       effectInBuffer.width    = CGBitmapContextGetWidth(effectInContext);
       effectInBuffer.height   = CGBitmapContextGetHeight(effectInContext);
       effectInBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectInContext);
-      
+
       UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
       CGContextRef effectOutContext = UIGraphicsGetCurrentContext();
       vImage_Buffer effectOutBuffer;
@@ -145,8 +145,8 @@
       effectOutBuffer.width    = CGBitmapContextGetWidth(effectOutContext);
       effectOutBuffer.height   = CGBitmapContextGetHeight(effectOutContext);
       effectOutBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectOutContext);
-      
-      
+
+
       if (hasBlur) {
         // A description of how to compute the box kernel width from the Gaussian
         // radius (aka standard deviation) appears in the SVG spec:
@@ -165,13 +165,13 @@
         if (radius % 2 != 1) {
           radius += 1; // force radius to be odd so that the three box-blur methodology works.
         }
-        
+
         if (didCancel()) {
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
           return nil;
         }
-        
+
         vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
 
         if (didCancel()) {
@@ -179,7 +179,7 @@
           UIGraphicsEndImageContext();
           return nil;
         }
-        
+
         vImageBoxConvolve_ARGB8888(&effectOutBuffer, &effectInBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
 
         if (didCancel()) {
@@ -187,7 +187,7 @@
           UIGraphicsEndImageContext();
           return nil;
         }
-        
+
         vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
       }
 
@@ -196,8 +196,8 @@
         UIGraphicsEndImageContext();
         return nil;
       }
-      
-      
+
+
       BOOL effectImageBuffersAreSwapped = NO;
       if (hasSaturationChange) {
         CGFloat s = saturationDeltaFactor;
@@ -224,21 +224,21 @@
       if (!effectImageBuffersAreSwapped)
         effectImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
-      
+
       if (effectImageBuffersAreSwapped)
         effectImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
     }
-    
+
     // Set up output context.
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     CGContextRef outputContext = UIGraphicsGetCurrentContext();
     CGContextScaleCTM(outputContext, 1.0, -1.0);
     CGContextTranslateCTM(outputContext, 0, -self.size.height);
-    
+
     // Draw base image.
     CGContextDrawImage(outputContext, imageRect, self.CGImage);
-    
+
     // Draw effect image.
     if (hasBlur) {
       CGContextSaveGState(outputContext);
@@ -248,7 +248,7 @@
       CGContextDrawImage(outputContext, imageRect, effectImage.CGImage);
       CGContextRestoreGState(outputContext);
     }
-    
+
     // Add in color tint.
     if (tintColor) {
       CGContextSaveGState(outputContext);
@@ -256,11 +256,11 @@
       CGContextFillRect(outputContext, imageRect);
       CGContextRestoreGState(outputContext);
     }
-    
+
     // Output image is ready.
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+
     return outputImage;
   }
 }

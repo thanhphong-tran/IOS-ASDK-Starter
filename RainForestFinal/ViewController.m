@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2017 Razeware LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 #import "ViewController.h"
 #import "AnimalTableNodeController.h"
@@ -18,33 +39,33 @@
 
 - (instancetype)init
 {
-    if (!(self = [super init])) { return nil; }
-    
-    self.animals = @[[RainforestCardInfo birdCards], [RainforestCardInfo mammalCards], [RainforestCardInfo reptileCards]];
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    
-    //Create and user an ASPagerNode Here
-    
-    
-    self.pagerNode.backgroundColor = [UIColor blackColor];
-    return self;
+  if (!(self = [super init])) { return nil; }
+
+  self.animals = @[[RainforestCardInfo birdCards], [RainforestCardInfo mammalCards], [RainforestCardInfo reptileCards]];
+
+  UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+  layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+
+  //Create and user an ASPagerNode Here
+
+
+  self.pagerNode.backgroundColor = [UIColor blackColor];
+  return self;
 }
 
 #pragma mark - UIViewController
 
 - (void)viewWillLayoutSubviews
 {
-    [super viewWillLayoutSubviews];
-    self.pagerNode.frame = self.view.bounds;
+  [super viewWillLayoutSubviews];
+  self.pagerNode.frame = self.view.bounds;
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    [self.view addSubnode:self.pagerNode];
+  [super viewDidLoad];
+
+  [self.view addSubnode:self.pagerNode];
 }
 
 #pragma mark - ASPagerNode Datasource
@@ -53,7 +74,7 @@
 
 - (BOOL)prefersStatusBarHidden
 {
-    return YES;
+  return YES;
 }
 
 @end
