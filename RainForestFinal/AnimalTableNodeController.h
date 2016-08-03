@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class RainforestCardInfo;
+
 @interface AnimalTableNodeController : UIViewController
-- (instancetype)initWithAnimals:(NSArray *)animals;
+- (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *> *)animals;
 @end

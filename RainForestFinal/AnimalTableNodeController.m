@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,17 +27,28 @@
 
 static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
-@interface AnimalTableNodeController ()<UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSMutableArray <RainforestCardInfo *>*animals;
+@interface AnimalTableNodeController ()
+@property (strong, nonatomic) UITableView *tableView;
+@property (strong, nonatomic) NSMutableArray <RainforestCardInfo *> *animals;
 @end
+
+@interface AnimalTableNodeController (DataSource)<UITableViewDataSource>
+@end
+
+@interface AnimalTableNodeController (Delegate)<UITableViewDelegate>
+@end
+
+@interface AnimalTableNodeController (Helpers)<ASTableDelegate>
+- (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block;
+- (void)insertNewRowsInTableView:(NSArray *)newAnimals;
+@end
+
 
 @implementation AnimalTableNodeController
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *>*)animals
-{
+- (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *> *)animals {
   if (!(self = [super init])) { return nil; }
 
   self.animals = animals.mutableCopy;
@@ -45,10 +56,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
   return self;
 }
 
-#pragma mark - UIViewController
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
   [super viewDidLoad];
 
   self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -56,26 +64,33 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
   self.tableView.dataSource = self;
   self.tableView.delegate = self;
+  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
   [self.view addSubview:self.tableView];
 }
 
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
 
   self.tableView.frame = self.view.bounds;
 }
 
-#pragma mark - ASTableDataSource
+#pragma mark - View Controller Appearance
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (BOOL)prefersStatusBarHidden {
+  return YES;
+}
+
+@end
+
+
+@implementation AnimalTableNodeController (DataSource)
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   CardCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifier];
 
   cell.backgroundColor = [UIColor lightGrayColor];
@@ -84,51 +99,45 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
   return cell;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   return self.animals.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  return self.view.bounds.size.height;
-}
-
-#pragma mark - ASTableDelegate
-
-
-
-#pragma mark - Helpers
-
-//- (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block
-//{
-//    NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
-//
-//    //it's important that this block is run on the main thread
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        block(moreAnimals);
-//    });
-//}
-//
-//- (void)insertNewRowsInTableView:(NSArray *)newAnimals
-//{
-//    NSInteger section = 0;
-//    NSMutableArray *indexPaths = [NSMutableArray array];
-//
-//    NSUInteger newTotalNumberOfPhotos = self.animals.count + newAnimals.count;
-//    for (NSUInteger row = self.animals.count; row < newTotalNumberOfPhotos; row++) {
-//        NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
-//        [indexPaths addObject:path];
-//    }
-//
-//    [self.animals addObjectsFromArray:newAnimals];
-//    [self.tableNode.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-//}
-
-- (BOOL)prefersStatusBarHidden
-{
-  return YES;
 }
 
 @end
 
+
+@implementation AnimalTableNodeController (Delegate)
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  return self.view.bounds.size.height;
+}
+
+@end
+
+
+@implementation AnimalTableNodeController (Helpers)
+
+- (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block {
+//  NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
+//
+//  // Important: this block must run on the main thread
+//  dispatch_async(dispatch_get_main_queue(), ^{
+//    block(moreAnimals);
+//  });
+}
+
+- (void)insertNewRowsInTableView:(NSArray *)newAnimals {
+//  NSInteger section = 0;
+//  NSMutableArray *indexPaths = [NSMutableArray array];
+//
+//  NSUInteger newTotalNumberOfPhotos = self.animals.count + newAnimals.count;
+//  for (NSUInteger row = self.animals.count; row < newTotalNumberOfPhotos; row++) {
+//    NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
+//    [indexPaths addObject:path];
+//  }
+//
+//  [self.animals addObjectsFromArray:newAnimals];
+//  [self.node.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+}
+
+@end

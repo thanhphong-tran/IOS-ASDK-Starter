@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,24 +27,24 @@
 
 #import "UIImage+ImageEffects.h"
 
-@interface CardNode ()<ASNetworkImageNodeDelegate>
-
+@interface CardNode ()
+@property (strong, nonatomic) RainforestCardInfo *animalInfo;
 @property (strong, nonatomic) ASImageNode *backgroundImageNode;
 @property (strong, nonatomic) ASNetworkImageNode *animalImageNode;
 @property (strong, nonatomic) ASTextNode *animalNameTextNode;
-
 @property (strong, nonatomic) ASTextNode *animalDescriptionTextNode;
-
 @property (strong, nonatomic) GradientNode *gradientNode;
-
 @end
+
+@interface CardNode (ASNetworkImageNodeDelegate)<ASNetworkImageNodeDelegate>
+@end
+
 
 @implementation CardNode
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
-{
+- (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo; {
   if (!(self = [super init])) { return nil; }
 
   self.animalInfo = animalInfo;
@@ -52,11 +52,11 @@
   self.backgroundColor = [UIColor lightGrayColor];
   self.clipsToBounds = YES;
 
-  self.backgroundImageNode       = [[ASImageNode alloc] init];
-  self.animalImageNode           = [[ASNetworkImageNode alloc] init];
-  self.animalNameTextNode        = [[ASTextNode alloc] init];
+  self.backgroundImageNode = [[ASImageNode alloc] init];
+  self.animalImageNode = [[ASNetworkImageNode alloc] init];
+  self.animalNameTextNode = [[ASTextNode alloc] init];
   self.animalDescriptionTextNode = [[ASTextNode alloc] init];
-  self.gradientNode              = [[GradientNode alloc] init];
+  self.gradientNode = [[GradientNode alloc] init];
 
   //Animal Image
   self.animalImageNode.URL = self.animalInfo.imageURL;
@@ -64,7 +64,6 @@
   self.animalImageNode.delegate = self;
   self.animalImageNode.placeholderFadeDuration = 0.15;
   self.animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
-  self.animalImageNode.shouldRenderProgressImages = YES;
 
   //Animal Name
   self.animalNameTextNode.attributedString = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
@@ -77,8 +76,9 @@
   //Background Image
   self.backgroundImageNode.placeholderFadeDuration = 0.15;
   self.backgroundImageNode.imageModificationBlock = ^(UIImage *image) {
-    UIImage *newImage = [image applyBlurWithRadius:30 tintColor:[UIColor colorWithWhite:0.5 alpha:0.3] saturationDeltaFactor:1.8 maskImage:nil];
-    return newImage ? newImage : image;
+    UIColor *tintColor = [UIColor colorWithWhite:0.5 alpha:0.3];
+    UIImage *newImage = [image applyBlurWithRadius:30 tintColor:tintColor saturationDeltaFactor:1.8 maskImage:nil];
+    return newImage ?: image;
   };
 
   //Gradient Node
@@ -95,84 +95,121 @@
   return self;
 }
 
-#pragma mark - ASDisplayNode
+#pragma mark - Node Layout
 
-- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
-{
-  self.preferredFrameSize = [UIScreen mainScreen].bounds.size;
+- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize {
 
+  // Main Image Ratio
   CGFloat ratio = (self.preferredFrameSize.height * (2.0/3.0))/self.preferredFrameSize.width;
-  ASRatioLayoutSpec *imageRatioSpec = [ASRatioLayoutSpec ratioLayoutSpecWithRatio:ratio child:self.animalImageNode];
+  ASRatioLayoutSpec *imageRatioSpec =
+  [ASRatioLayoutSpec ratioLayoutSpecWithRatio:ratio
+                                        child:self.animalImageNode];
+  // Overlay Gradient over Main Image
+  ASOverlayLayoutSpec *gradientOverlaySpec =
+  [ASOverlayLayoutSpec overlayLayoutSpecWithChild:imageRatioSpec
+                                          overlay:self.gradientNode];
+  // Inset Name
+  ASInsetLayoutSpec *nameInsetSpec =
+  [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(0, 16.0, 8.0, 0.0)
+                                         child:self.animalNameTextNode];
+  // Name Stack
+  ASStackLayoutSpec *imageVerticalStackSpec =
+  [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical
+                                          spacing:0 justifyContent:ASStackLayoutJustifyContentEnd
+                                       alignItems:ASStackLayoutAlignItemsStart
+                                         children:@[nameInsetSpec]];
 
-  ASOverlayLayoutSpec *gradientOverlaySpec = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:imageRatioSpec overlay:self.gradientNode];
+  // Overlay Name Stack over MainImage+Gradient
+  ASOverlayLayoutSpec *titleOverlaySpec =
+  [ASOverlayLayoutSpec overlayLayoutSpecWithChild:gradientOverlaySpec
+                                          overlay:imageVerticalStackSpec];
 
-  ASInsetLayoutSpec *nameInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(0, 16.0, 8.0, 0.0) child:self.animalNameTextNode];
+  // Inset Description
+  ASInsetLayoutSpec *descriptionTextInsetSpec =
+  [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0)
+                                         child:self.animalDescriptionTextNode];
 
-  ASStackLayoutSpec *imageVerticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentEnd alignItems:ASStackLayoutAlignItemsStart children:@[nameInsetSpec]];
+  // Description Sizing
+  self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width,
+                                                                 self.preferredFrameSize.height * (1.0 / 3.0));
+  CGFloat height = [UIScreen mainScreen].bounds.size.height / 3.0;
 
-  ASOverlayLayoutSpec *titleOverlaySpec = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:gradientOverlaySpec overlay:imageVerticalStackSpec];
+  ASRelativeSize heightRelativeSize = ASRelativeSizeMake(ASRelativeDimensionMake(ASRelativeDimensionTypePercent, 1.0),
+                                                         ASRelativeDimensionMake(ASRelativeDimensionTypePoints, height));
 
-  ASInsetLayoutSpec *descriptionTextInsetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:UIEdgeInsetsMake(16.0, 28.0, 12.0, 28.0) child:self.animalDescriptionTextNode];
-  self.animalDescriptionTextNode.preferredFrameSize = CGSizeMake(self.preferredFrameSize.width, self.preferredFrameSize.height * (1.0/3.0));
+  descriptionTextInsetSpec.sizeRange = ASRelativeSizeRangeMake(heightRelativeSize, heightRelativeSize);
 
-  ASStackLayoutSpec *verticalStackSpec = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical spacing:0 justifyContent:ASStackLayoutJustifyContentStart alignItems:ASStackLayoutAlignItemsStart children:@[titleOverlaySpec, descriptionTextInsetSpec]];
 
-  ASBackgroundLayoutSpec *backgroundLayoutSpec = [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec background:self.backgroundImageNode];
+  // Description Text Static
+  ASStaticLayoutSpec *staticLayoutSpec =
+  [ASStaticLayoutSpec staticLayoutSpecWithChildren:@[descriptionTextInsetSpec]];
+
+
+
+  // Title/Description Stack
+  ASStackLayoutSpec *verticalStackSpec =
+  [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical
+                                          spacing:0
+                                   justifyContent:ASStackLayoutJustifyContentStart
+                                       alignItems:ASStackLayoutAlignItemsStart
+                                         children:@[titleOverlaySpec,
+                                                    staticLayoutSpec]];
+
+  // Background Blurred Image
+  ASBackgroundLayoutSpec *backgroundLayoutSpec =
+  [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:verticalStackSpec
+                                             background:self.backgroundImageNode];
 
   return backgroundLayoutSpec;
 }
 
+#pragma mark - Interface Callbacks
+
+- (void)visibleStateDidChange:(BOOL)isVisible {
+  [super visibleStateDidChange:isVisible];
+  if (!self.name) { return; }
+
+  if (isVisible) {
+    NSLog(@"%@ is visible!", self.name);
+  } else {
+    NSLog(@"%@ left the screen", self.name);
+  }
+}
+
+- (void)loadStateDidChange:(BOOL)inLoadState {
+  [super loadStateDidChange:inLoadState];
+  if (!self.name) { return; }
+
+  if (inLoadState) {
+    NSLog(@"%@ is loading data!", self.name);
+  } else {
+    NSLog(@"%@ has left the data loading range.", self.name);
+  }
+}
+
+- (void)displayStateDidChange:(BOOL)inDisplayState {
+  [super displayStateDidChange:inDisplayState];
+  if (!self.name) { return; }
+
+  if (inDisplayState) {
+    NSLog(@"%@ has started rendering!", self.name);
+  } else {
+    NSLog(@"%@ has left the view display state.", self.name);
+  }
+}
+
+@end
+
 #pragma mark - ASNetworkImageNodeDelegate
 
-- (void)imageNode:(ASNetworkImageNode *)imageNode didFailWithError:(NSError *)error
-{
+@implementation CardNode (ASNetworkImageNodeDelegate)
+
+- (void)imageNode:(ASNetworkImageNode *)imageNode didFailWithError:(NSError *)error {
   NSLog(@"Image failed to load with error: \n%@", error);
 }
 
-- (void)imageNode:(ASNetworkImageNode *)imageNode didLoadImage:(UIImage *)image
-{
+- (void)imageNode:(ASNetworkImageNode *)imageNode didLoadImage:(UIImage *)image {
   self.backgroundImageNode.image = image;
 }
-
-#pragma mark - Interface Callbacks
-
-//#pragma mark Visible State
-//- (void)visibleStateDidChange:(BOOL)isVisible
-//{
-//    [super visibleStateDidChange:isVisible];
-//    if (!self.name) { return; }
-//
-//    if (isVisible) {
-//        NSLog(@"%@ is visible!", self.name);
-//    } else {
-//        NSLog(@"%@ left the screen", self.name);
-//    }
-//}
-//
-//#pragma mark Display State
-//- (void)displayStateDidChange:(BOOL)inDisplayState
-//{
-//    [super displayStateDidChange:inDisplayState];
-//    if (!self.name) { return; }
-//
-//    if (inDisplayState) {
-//        NSLog(@"%@ has started rendering!", self.name);
-//    } else {
-//        NSLog(@"%@ has left the view display state.", self.name);
-//    }
-//}
-//
-//#pragma mark Load State
-//- (void)loadStateDidChange:(BOOL)inLoadState
-//{
-//    [super loadStateDidChange:inLoadState];
-//    if (!self.name) { return; }
-//
-//    if (inLoadState) {
-//        NSLog(@"%@ is loading data!", self.name);
-//    } else {
-//        NSLog(@"%@ has left the data loading range.", self.name);
-//    }
-//}
 
 @end

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,7 @@
  * THE SOFTWARE.
  */
 
-#import <UIKit/UIKit.h>
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
-
-#import <AsyncDisplayKit/ASDisplayNode+Subclasses.h>
 
 @class RainforestCardInfo;
 
@@ -31,5 +28,4 @@
 
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo;
 
-@property (strong, nonatomic) RainforestCardInfo *animalInfo;
 @end

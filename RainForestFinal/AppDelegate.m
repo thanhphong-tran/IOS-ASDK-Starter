@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,17 +32,15 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-  CGRect windowRect = [[UIScreen mainScreen] bounds];
-
-  _window = [[UIWindow alloc] initWithFrame:windowRect];
-
-  AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo allAnimals]];
-  [_window setRootViewController:vc];
-
-  [_window makeKeyAndVisible];
-
+  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  [self installRootViewController];
+  [self.window makeKeyAndVisible];
   return YES;
+}
+
+- (void)installRootViewController {
+  AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo allAnimals]];
+  self.window.rootViewController = vc;
 }
 
 @end

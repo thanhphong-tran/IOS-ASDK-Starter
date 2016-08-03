@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +28,11 @@ NSString const* REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Pro
 
 @implementation RainforestCardInfo
 
-+ (NSArray *)allAnimals
-{
++ (NSArray <RainforestCardInfo *> *)allAnimals {
   return [[[self birdCards] arrayByAddingObjectsFromArray:[self mammalCards]] arrayByAddingObjectsFromArray:[self reptileCards]];
 }
 
-+ (NSArray *)birdCards
-{
++ (NSArray <RainforestCardInfo *> *)birdCards {
   NSDictionary *parrotData     = @{@"name": @"Parrot", @"imageURL": [NSString stringWithFormat:@"%@/blueHeadedParrot.jpg", BIRD_BASE_URL], @"animalDescription": @"The blue-headed parrot, also known as the blue-headed pionus (Pionus menstruus) is a medium large parrot. It is about 27 cm long and they are mainly green with a blue head and neck, and red under tail feathers.[2] It is a resident bird in tropical and subtropical South America and southern Central America, from Costa Rica, Venezuela and Trinidad south to Bolivia and Brazil. It is named for its medium-blue head and neck."};
   NSDictionary *harpyEagleData = @{@"name": @"Harpy Eagle", @"imageURL": [NSString stringWithFormat:@"%@/HarpyEagle.jpg", BIRD_BASE_URL], @"animalDescription": @"The harpy eagle (Harpia harpyja) is a neotropical species of eagle. It is sometimes known as the American harpy eagle to distinguish it from the Papuan eagle, which is sometimes known as the New Guinea harpy eagle or Papuan harpy eagle.[3] It is the largest and most powerful raptor found in the Americas,[4] and among the largest extant species of eagles in the world. It usually inhabits tropical lowland rainforests in the upper (emergent) canopy layer. Destruction of its natural habitat has caused it to vanish from many parts of its former range, and it is nearly extirpated in Central America. In Brazil, the harpy eagle is also known as royal-hawk (in Portuguese: gavião-real)."};
   NSDictionary *loveBirdData   = @{@"name": @"Love Bird", @"imageURL": [NSString stringWithFormat:@"%@/LoveBird.jpg", BIRD_BASE_URL], @"animalDescription": @"A lovebird is one of nine species of the genus Agapornis (Greek: αγάπη agape 'love'; όρνις ornis 'bird'). They are a social and affectionate small parrot. Eight species are native to the African continent, and the grey-headed lovebird is native to Madagascar. Their name stems from the parrots' strong, monogamous pair bonding and the long periods which paired birds spend sitting together. Lovebirds live in small flocks and eat fruit, vegetables, grasses and seed. Black-winged lovebirds also eat insects and figs, and the black-collared lovebirds have a special dietary requirement for native figs, making them problematic to keep in captivity."};
@@ -50,8 +48,7 @@ NSString const* REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Pro
   return @[parrotInfo, harpyEagleInfo, loveBirdInfo, macawInfo, mergusDuckInfo];
 }
 
-+ (NSArray *)mammalCards
-{
++ (NSArray <RainforestCardInfo *> *)mammalCards {
   NSDictionary *jaguarData = @{@"name": @"Jaguar", @"imageURL": [NSString stringWithFormat:@"%@/Jaguar.jpg", MAMMAL_BASE_URL], @"animalDescription": @"The jaguar (Panthera onca) is a big cat, a feline in the Panthera genus, and is the only extant Panthera species native to the Americas. The jaguar is the third-largest feline after the tiger and the lion, and the largest in the Americas. The jaguar's present range extends from Southwestern United States and Mexico across much of Central America and south to Paraguay and northern Argentina. Apart from a known and possibly breeding population in Arizona (southeast of Tucson) and the bootheel of New Mexico, the cat has largely been extirpated from the United States since the early 20th century."};
   NSDictionary *margayCatData = @{@"name": @"Margay Cat", @"imageURL": [NSString stringWithFormat:@"%@/MargayCat.jpg", MAMMAL_BASE_URL], @"animalDescription": @"The margay (Leopardus wiedii) is a small cat native to Central and South America that is listed as near threatened by the IUCN since 2008 because remaining populations are thought to be declining due to loss of habitat following conversion of forests."};
   NSDictionary *monkeyData = @{@"name": @"Monkey", @"imageURL": [NSString stringWithFormat:@"%@/monkey.jpg", MAMMAL_BASE_URL], @"animalDescription": @"Monkeys are haplorhine (\"dry-nosed\") primates, a paraphyletic group generally possessing tails and consisting of approximately 260 known living species. Many monkey species are tree-dwelling (arboreal), although there are species that live primarily on the ground, such as baboons. Most species are also active during the day (diurnal). Monkeys are generally considered to be intelligent, particularly Old World monkeys."};
@@ -67,8 +64,7 @@ NSString const* REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Pro
   return @[jaguarInfo, margayCatInfo, monkeyInfo, northernTamanduaInfo, slothInfo];
 }
 
-+ (NSArray *)reptileCards
-{
++ (NSArray <RainforestCardInfo *> *)reptileCards {
   NSDictionary *alligatorData = @{@"name": @"Alligator", @"imageURL": [NSString stringWithFormat:@"%@/Alligator.jpg", REPTILE_BASE_URL], @"animalDescription": @"An alligator is a crocodilian in the genus Alligator of the family Alligatoridae. The two living species are the American alligator (A. mississippiensis) and the Chinese alligator (A. sinensis). In addition, several extinct species of alligator are known from fossil remains. Alligators first appeared during the Paleocene epoch about 37 million years ago."};
   NSDictionary *beardedDragonData = @{@"name": @"Bearded Dragon", @"imageURL": [NSString stringWithFormat:@"%@/BeardedDragon.jpg", REPTILE_BASE_URL], @"animalDescription": @"Pogona is a genus of reptiles containing eight lizard species, which are often known by the common name bearded dragons. The name \"bearded dragon\" refers to the \"beard\" of the lizard, the underside of the throat which turns black if they are stressed or see a potential rival. They are adept climbers, spending time on branches and in bushes and near human habitation. Pogona species bask on rocks and exposed branches in the mornings and afternoons. They are found throughout much of Australia in a wide range of habitats such as deserts, shrublands and Eucalyptus woodlands."};
   NSDictionary *komodoDragonData   = @{@"name": @"Komodo Dragon", @"imageURL": [NSString stringWithFormat:@"%@/KomodoDragon.jpg", REPTILE_BASE_URL], @"animalDescription": @"The Komodo dragon[4] (Varanus komodoensis), also known as the Komodo monitor, is a large species of lizard found in the Indonesian islands of Komodo, Rinca, Flores, Gili Motang, and Padar.[5] A member of the monitor lizard family Varanidae, it is the largest living species of lizard, growing to a maximum length of 3 metres (10 ft) in rare cases and weighing up to approximately 70 kilograms (150 lb)."};
@@ -84,8 +80,7 @@ NSString const* REPTILE_BASE_URL = @"https://www.raywenderlich.com/downloads/Pro
   return @[alligatorInfo, beardedDragonInfo, komodoDragonInfo, spectacledCaimanInfo, tRexInfo];
 }
 
-- (instancetype)initWithDictionary:(NSDictionary *)animalData
-{
+- (instancetype)initWithDictionary:(NSDictionary *)animalData {
   if (!(self = [super init])) {
     return nil;
   }

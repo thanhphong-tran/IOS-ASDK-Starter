@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +27,20 @@
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
-@interface ViewController ()<ASPagerDataSource>
+@interface ViewController ()
 @property (strong, nonatomic) ASPagerNode *pagerNode;
-
 @property (strong, nonatomic) NSArray *animals;
 @end
+
+@interface ViewController (ASPagerDataSource)<ASPagerDataSource>
+@end
+
 
 @implementation ViewController
 
 #pragma mark - Lifecycle
 
-- (instancetype)init
-{
+- (instancetype)init {
   if (!(self = [super init])) { return nil; }
 
   self.animals = @[[RainforestCardInfo birdCards], [RainforestCardInfo mammalCards], [RainforestCardInfo reptileCards]];
@@ -46,35 +48,37 @@
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
   layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-  //Create and user an ASPagerNode Here
-
+  // Create and configure ASPagerNode instance here:
 
   self.pagerNode.backgroundColor = [UIColor blackColor];
+
   return self;
 }
 
-#pragma mark - UIViewController
-
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
   self.pagerNode.frame = self.view.bounds;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
   [super viewDidLoad];
 
   [self.view addSubnode:self.pagerNode];
 }
 
-#pragma mark - ASPagerNode Datasource
+#pragma mark - View Controller Appearance
 
-
-
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
   return YES;
+}
+
+@end
+
+
+@implementation ViewController (ASPagerDataSource)
+
+- (NSInteger)numberOfPagesInPagerNode:(ASPagerNode *)pagerNode {
+  return 0;
 }
 
 @end

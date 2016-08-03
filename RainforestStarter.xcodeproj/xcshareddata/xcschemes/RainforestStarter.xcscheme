@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-               BuildableName = "RainForestFinal.app"
-               BlueprintName = "RainForestFinal"
-               ReferencedContainer = "container:RainForestFinal.xcodeproj">
+               BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+               BlueprintName = "RainForestStarter"
+               ReferencedContainer = "container:RainforestStarter.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-            BuildableName = "RainForestFinal.app"
-            BlueprintName = "RainForestFinal"
-            ReferencedContainer = "container:RainForestFinal.xcodeproj">
+            BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+            BlueprintName = "RainForestStarter"
+            ReferencedContainer = "container:RainforestStarter.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-            BuildableName = "RainForestFinal.app"
-            BlueprintName = "RainForestFinal"
-            ReferencedContainer = "container:RainForestFinal.xcodeproj">
+            BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+            BlueprintName = "RainForestStarter"
+            ReferencedContainer = "container:RainforestStarter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-            BuildableName = "RainForestFinal.app"
-            BlueprintName = "RainForestFinal"
-            ReferencedContainer = "container:RainForestFinal.xcodeproj">
+            BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+            BlueprintName = "RainForestStarter"
+            ReferencedContainer = "container:RainforestStarter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

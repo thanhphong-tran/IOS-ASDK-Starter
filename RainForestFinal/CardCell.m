@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,19 +29,15 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface CardCell ()
-
-@property (nonatomic, strong) UIImageView *backgroundImageView;
-@property (nonatomic, strong) UIImageView *animalImageView;
-@property (nonatomic, strong) UILabel *animalNameLabel;
-
-@property (nonatomic, strong) UITextView *animalDescriptionTextView;
-
+@property (strong, nonatomic) UIImageView *backgroundImageView;
+@property (strong, nonatomic) UIImageView *animalImageView;
+@property (strong, nonatomic) UILabel *animalNameLabel;
+@property (strong, nonatomic) UITextView *animalDescriptionTextView;
 @end
 
 @implementation CardCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
   if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
     return nil;
   }
@@ -66,16 +62,13 @@
   return self;
 }
 
-- (void)prepareForReuse
-{
+- (void)prepareForReuse {
   [super prepareForReuse];
-
   self.animalImageView.image = nil;
   self.backgroundImageView.image = nil;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
   [super layoutSubviews];
 
   CGSize size = self.bounds.size;
