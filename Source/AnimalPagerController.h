@@ -22,8 +22,5 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
-
+@interface AnimalPagerController : UIViewController
 @end
-

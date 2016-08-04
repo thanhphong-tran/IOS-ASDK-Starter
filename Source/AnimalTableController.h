@@ -24,6 +24,6 @@
 
 @class RainforestCardInfo;
 
-@interface AnimalTableNodeController : UIViewController
+@interface AnimalTableController : UIViewController
 - (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *> *)animals;
 @end

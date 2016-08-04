@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/rcacheaux/Downloads/AsyncDisplayKit-2.0-Tutorial-Part1-StarterProject/RainforestStarter.xcodeproj">
+      location = "group:RainforestStarter.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

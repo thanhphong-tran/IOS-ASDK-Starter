@@ -8,45 +8,48 @@
 
 /* Begin PBXBuildFile section */
 		91F8487F51508425FCE7F8C0 /* libPods-RainForestFinal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AFCB603422C3729A0BEAF1 /* libPods-RainForestFinal.a */; };
-		AE2FB48F1C821D0C003AD243 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB48E1C821D0C003AD243 /* main.m */; };
-		AE2FB4921C821D0C003AD243 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4911C821D0C003AD243 /* AppDelegate.m */; };
-		AE2FB49A1C821D0C003AD243 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE2FB4991C821D0C003AD243 /* Assets.xcassets */; };
-		AE2FB4A71C822006003AD243 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4A61C822006003AD243 /* UIImage+ImageEffects.m */; };
-		AE2FB4B41C822CA2003AD243 /* Factories.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4B31C822CA2003AD243 /* Factories.m */; };
-		AE2FB4BA1C8242C2003AD243 /* RainforestCardInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */; };
-		AE2FB4BD1C82725A003AD243 /* AnimalTableNodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */; };
-		AE2FB4C31C8DDAB5003AD243 /* CardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2FB4C21C8DDAB5003AD243 /* CardCell.m */; };
-		AE3295FD1C9BA73E00BE8DA4 /* CardNode.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3295FC1C9BA73E00BE8DA4 /* CardNode.m */; };
-		AE3296011C9BA76700BE8DA4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3295FF1C9BA76700BE8DA4 /* ViewController.m */; };
-		AE3296041C9BA81B00BE8DA4 /* GradientNode.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3296031C9BA81B00BE8DA4 /* GradientNode.m */; };
+		9F7D350F1D537A8100E73C90 /* CardNode_InterfaceCallbacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F7D350D1D537A8100E73C90 /* CardNode_InterfaceCallbacks.m */; };
+		9FF736E51D5376DA009B70D9 /* AnimalTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736D31D5376DA009B70D9 /* AnimalTableController.m */; };
+		9FF736E61D5376DA009B70D9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736D51D5376DA009B70D9 /* AppDelegate.m */; };
+		9FF736E71D5376DA009B70D9 /* CardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736D71D5376DA009B70D9 /* CardCell.m */; };
+		9FF736E81D5376DA009B70D9 /* CardNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736D91D5376DA009B70D9 /* CardNode.m */; };
+		9FF736E91D5376DA009B70D9 /* Factories.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736DB1D5376DA009B70D9 /* Factories.m */; };
+		9FF736EA1D5376DA009B70D9 /* GradientNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736DD1D5376DA009B70D9 /* GradientNode.m */; };
+		9FF736EB1D5376DA009B70D9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736DE1D5376DA009B70D9 /* main.m */; };
+		9FF736EC1D5376DA009B70D9 /* RainforestCardInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736E01D5376DA009B70D9 /* RainforestCardInfo.m */; };
+		9FF736ED1D5376DA009B70D9 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736E21D5376DA009B70D9 /* UIImage+ImageEffects.m */; };
+		9FF736EE1D5376DA009B70D9 /* AnimalPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF736E41D5376DA009B70D9 /* AnimalPagerController.m */; };
+		9FF736F11D5376E3009B70D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9FF736F01D5376E3009B70D9 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4E68A3A3C420DC6B19D02192 /* Pods-RainForestFinal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RainForestFinal.release.xcconfig"; path = "Pods/Target Support Files/Pods-RainForestFinal/Pods-RainForestFinal.release.xcconfig"; sourceTree = "<group>"; };
 		63AFCB603422C3729A0BEAF1 /* libPods-RainForestFinal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RainForestFinal.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79C731D5DCD29A2373C5D3A3 /* Pods-RainForestFinal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RainForestFinal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RainForestFinal/Pods-RainForestFinal.debug.xcconfig"; sourceTree = "<group>"; };
+		9F7D350D1D537A8100E73C90 /* CardNode_InterfaceCallbacks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CardNode_InterfaceCallbacks.m; path = Source/CardNode_InterfaceCallbacks.m; sourceTree = "<group>"; };
+		9F7D350E1D537A8100E73C90 /* CardNode_InterfaceCallbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardNode_InterfaceCallbacks.h; path = Source/CardNode_InterfaceCallbacks.h; sourceTree = "<group>"; };
+		9FF736D21D5376DA009B70D9 /* AnimalTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnimalTableController.h; path = Source/AnimalTableController.h; sourceTree = "<group>"; };
+		9FF736D31D5376DA009B70D9 /* AnimalTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnimalTableController.m; path = Source/AnimalTableController.m; sourceTree = "<group>"; };
+		9FF736D41D5376DA009B70D9 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = "<group>"; };
+		9FF736D51D5376DA009B70D9 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Source/AppDelegate.m; sourceTree = "<group>"; };
+		9FF736D61D5376DA009B70D9 /* CardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardCell.h; sourceTree = "<group>"; };
+		9FF736D71D5376DA009B70D9 /* CardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardCell.m; sourceTree = "<group>"; };
+		9FF736D81D5376DA009B70D9 /* CardNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardNode.h; sourceTree = "<group>"; };
+		9FF736D91D5376DA009B70D9 /* CardNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardNode.m; sourceTree = "<group>"; };
+		9FF736DA1D5376DA009B70D9 /* Factories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Factories.h; sourceTree = "<group>"; };
+		9FF736DB1D5376DA009B70D9 /* Factories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Factories.m; sourceTree = "<group>"; };
+		9FF736DC1D5376DA009B70D9 /* GradientNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientNode.h; sourceTree = "<group>"; };
+		9FF736DD1D5376DA009B70D9 /* GradientNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientNode.m; sourceTree = "<group>"; };
+		9FF736DE1D5376DA009B70D9 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9FF736DF1D5376DA009B70D9 /* RainforestCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainforestCardInfo.h; sourceTree = "<group>"; };
+		9FF736E01D5376DA009B70D9 /* RainforestCardInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RainforestCardInfo.m; sourceTree = "<group>"; };
+		9FF736E11D5376DA009B70D9 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		9FF736E21D5376DA009B70D9 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		9FF736E31D5376DA009B70D9 /* AnimalPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnimalPagerController.h; path = Source/AnimalPagerController.h; sourceTree = "<group>"; };
+		9FF736E41D5376DA009B70D9 /* AnimalPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnimalPagerController.m; path = Source/AnimalPagerController.m; sourceTree = "<group>"; };
+		9FF736F01D5376E3009B70D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9FF736F41D53770B009B70D9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE2FB48A1C821D0C003AD243 /* RainforestStarter.temp_caseinsensitive_rename.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RainforestStarter.temp_caseinsensitive_rename.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE2FB48E1C821D0C003AD243 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AE2FB4901C821D0C003AD243 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		AE2FB4911C821D0C003AD243 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AE2FB4991C821D0C003AD243 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AE2FB49E1C821D0C003AD243 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AE2FB4A51C822006003AD243 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
-		AE2FB4A61C822006003AD243 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
-		AE2FB4B21C822CA2003AD243 /* Factories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Factories.h; sourceTree = "<group>"; };
-		AE2FB4B31C822CA2003AD243 /* Factories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Factories.m; sourceTree = "<group>"; };
-		AE2FB4B81C8242C2003AD243 /* RainforestCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainforestCardInfo.h; sourceTree = "<group>"; };
-		AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RainforestCardInfo.m; sourceTree = "<group>"; };
-		AE2FB4BB1C82725A003AD243 /* AnimalTableNodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimalTableNodeController.h; sourceTree = "<group>"; };
-		AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimalTableNodeController.m; sourceTree = "<group>"; };
-		AE2FB4C11C8DDAB5003AD243 /* CardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardCell.h; sourceTree = "<group>"; };
-		AE2FB4C21C8DDAB5003AD243 /* CardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardCell.m; sourceTree = "<group>"; };
-		AE3295FB1C9BA73E00BE8DA4 /* CardNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardNode.h; sourceTree = "<group>"; };
-		AE3295FC1C9BA73E00BE8DA4 /* CardNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardNode.m; sourceTree = "<group>"; };
-		AE3295FF1C9BA76700BE8DA4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		AE3296001C9BA76700BE8DA4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		AE3296021C9BA81B00BE8DA4 /* GradientNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientNode.h; sourceTree = "<group>"; };
-		AE3296031C9BA81B00BE8DA4 /* GradientNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientNode.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,13 +73,51 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		9FF736D11D5376DA009B70D9 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				9FF736D61D5376DA009B70D9 /* CardCell.h */,
+				9FF736D71D5376DA009B70D9 /* CardCell.m */,
+				9FF736D81D5376DA009B70D9 /* CardNode.h */,
+				9FF736D91D5376DA009B70D9 /* CardNode.m */,
+				9FF736DA1D5376DA009B70D9 /* Factories.h */,
+				9FF736DB1D5376DA009B70D9 /* Factories.m */,
+				9FF736DC1D5376DA009B70D9 /* GradientNode.h */,
+				9FF736DD1D5376DA009B70D9 /* GradientNode.m */,
+				9FF736DE1D5376DA009B70D9 /* main.m */,
+				9FF736DF1D5376DA009B70D9 /* RainforestCardInfo.h */,
+				9FF736E01D5376DA009B70D9 /* RainforestCardInfo.m */,
+				9FF736E11D5376DA009B70D9 /* UIImage+ImageEffects.h */,
+				9FF736E21D5376DA009B70D9 /* UIImage+ImageEffects.m */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		9FF736EF1D5376E3009B70D9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9FF736F01D5376E3009B70D9 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		AE2FB4811C821D0C003AD243 = {
 			isa = PBXGroup;
 			children = (
-				AE2FB48C1C821D0C003AD243 /* Source */,
+				9FF736D21D5376DA009B70D9 /* AnimalTableController.h */,
+				9FF736D31D5376DA009B70D9 /* AnimalTableController.m */,
+				9F7D350E1D537A8100E73C90 /* CardNode_InterfaceCallbacks.h */,
+				9F7D350D1D537A8100E73C90 /* CardNode_InterfaceCallbacks.m */,
+				9FF736D41D5376DA009B70D9 /* AppDelegate.h */,
+				9FF736D51D5376DA009B70D9 /* AppDelegate.m */,
+				9FF736E31D5376DA009B70D9 /* AnimalPagerController.h */,
+				9FF736E41D5376DA009B70D9 /* AnimalPagerController.m */,
+				9FF736D11D5376DA009B70D9 /* Source */,
+				9FF736EF1D5376E3009B70D9 /* Resources */,
 				AE2FB48B1C821D0C003AD243 /* Products */,
 				83FE17C6D4EC85343274480B /* Pods */,
 				BC9ACDA6D94C34A56AC7E40E /* Frameworks */,
+				9FF736F41D53770B009B70D9 /* Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,51 +127,6 @@
 				AE2FB48A1C821D0C003AD243 /* RainforestStarter.temp_caseinsensitive_rename.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		AE2FB48C1C821D0C003AD243 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				AE2FB4901C821D0C003AD243 /* AppDelegate.h */,
-				AE2FB4911C821D0C003AD243 /* AppDelegate.m */,
-				AE2FB4BB1C82725A003AD243 /* AnimalTableNodeController.h */,
-				AE2FB4BC1C82725A003AD243 /* AnimalTableNodeController.m */,
-				AE3296001C9BA76700BE8DA4 /* ViewController.h */,
-				AE3295FF1C9BA76700BE8DA4 /* ViewController.m */,
-				AE2FB4991C821D0C003AD243 /* Assets.xcassets */,
-				AE2FB49E1C821D0C003AD243 /* Info.plist */,
-				AE2FB4A41C821FEA003AD243 /* Misc */,
-				AE2FB48D1C821D0C003AD243 /* Supporting Files */,
-			);
-			name = Source;
-			path = RainForestFinal;
-			sourceTree = "<group>";
-		};
-		AE2FB48D1C821D0C003AD243 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				AE2FB48E1C821D0C003AD243 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		AE2FB4A41C821FEA003AD243 /* Misc */ = {
-			isa = PBXGroup;
-			children = (
-				AE2FB4B81C8242C2003AD243 /* RainforestCardInfo.h */,
-				AE2FB4B91C8242C2003AD243 /* RainforestCardInfo.m */,
-				AE2FB4C11C8DDAB5003AD243 /* CardCell.h */,
-				AE2FB4C21C8DDAB5003AD243 /* CardCell.m */,
-				AE3295FB1C9BA73E00BE8DA4 /* CardNode.h */,
-				AE3295FC1C9BA73E00BE8DA4 /* CardNode.m */,
-				AE3296021C9BA81B00BE8DA4 /* GradientNode.h */,
-				AE3296031C9BA81B00BE8DA4 /* GradientNode.m */,
-				AE2FB4B21C822CA2003AD243 /* Factories.h */,
-				AE2FB4B31C822CA2003AD243 /* Factories.m */,
-				AE2FB4A51C822006003AD243 /* UIImage+ImageEffects.h */,
-				AE2FB4A61C822006003AD243 /* UIImage+ImageEffects.m */,
-			);
-			name = Misc;
 			sourceTree = "<group>";
 		};
 		BC9ACDA6D94C34A56AC7E40E /* Frameworks */ = {
@@ -201,7 +197,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE2FB49A1C821D0C003AD243 /* Assets.xcassets in Resources */,
+				9FF736F11D5376E3009B70D9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,16 +256,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE3296011C9BA76700BE8DA4 /* ViewController.m in Sources */,
-				AE2FB4BA1C8242C2003AD243 /* RainforestCardInfo.m in Sources */,
-				AE2FB4A71C822006003AD243 /* UIImage+ImageEffects.m in Sources */,
-				AE2FB4921C821D0C003AD243 /* AppDelegate.m in Sources */,
-				AE2FB48F1C821D0C003AD243 /* main.m in Sources */,
-				AE3296041C9BA81B00BE8DA4 /* GradientNode.m in Sources */,
-				AE2FB4C31C8DDAB5003AD243 /* CardCell.m in Sources */,
-				AE3295FD1C9BA73E00BE8DA4 /* CardNode.m in Sources */,
-				AE2FB4B41C822CA2003AD243 /* Factories.m in Sources */,
-				AE2FB4BD1C82725A003AD243 /* AnimalTableNodeController.m in Sources */,
+				9F7D350F1D537A8100E73C90 /* CardNode_InterfaceCallbacks.m in Sources */,
+				9FF736E71D5376DA009B70D9 /* CardCell.m in Sources */,
+				9FF736EA1D5376DA009B70D9 /* GradientNode.m in Sources */,
+				9FF736EC1D5376DA009B70D9 /* RainforestCardInfo.m in Sources */,
+				9FF736E81D5376DA009B70D9 /* CardNode.m in Sources */,
+				9FF736EE1D5376DA009B70D9 /* AnimalPagerController.m in Sources */,
+				9FF736E61D5376DA009B70D9 /* AppDelegate.m in Sources */,
+				9FF736ED1D5376DA009B70D9 /* UIImage+ImageEffects.m in Sources */,
+				9FF736E51D5376DA009B70D9 /* AnimalTableController.m in Sources */,
+				9FF736EB1D5376DA009B70D9 /* main.m in Sources */,
+				9FF736E91D5376DA009B70D9 /* Factories.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,7 +358,7 @@
 			baseConfigurationReference = 79C731D5DCD29A2373C5D3A3 /* Pods-RainForestFinal.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = RainForestFinal/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.RainforestStarter;
 				PRODUCT_NAME = RainforestStarter.temp_caseinsensitive_rename;
@@ -373,7 +370,7 @@
 			baseConfigurationReference = 4E68A3A3C420DC6B19D02192 /* Pods-RainForestFinal.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = RainForestFinal/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.RainforestStarter;
 				PRODUCT_NAME = RainforestStarter.temp_caseinsensitive_rename;

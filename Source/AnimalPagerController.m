@@ -20,23 +20,23 @@
  * THE SOFTWARE.
  */
 
-#import "ViewController.h"
-#import "AnimalTableNodeController.h"
+#import "AnimalPagerController.h"
+#import "AnimalTableController.h"
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
-@interface ViewController ()
+@interface AnimalPagerController ()
 @property (strong, nonatomic) ASPagerNode *pagerNode;
 @property (strong, nonatomic) NSArray *animals;
 @end
 
-@interface ViewController (ASPagerDataSource)<ASPagerDataSource>
+@interface AnimalPagerController (ASPagerDataSource)<ASPagerDataSource>
 @end
 
 
-@implementation ViewController
+@implementation AnimalPagerController
 
 #pragma mark - Lifecycle
 
@@ -75,7 +75,7 @@
 @end
 
 
-@implementation ViewController (ASPagerDataSource)
+@implementation AnimalPagerController (ASPagerDataSource)
 
 - (NSInteger)numberOfPagesInPagerNode:(ASPagerNode *)pagerNode {
   return 0;

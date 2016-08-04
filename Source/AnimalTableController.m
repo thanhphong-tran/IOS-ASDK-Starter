@@ -20,31 +20,31 @@
  * THE SOFTWARE.
  */
 
-#import "AnimalTableNodeController.h"
+#import "AnimalTableController.h"
 #import "RainforestCardInfo.h"
 #import "CardNode.h"
 #import "CardCell.h"
 
 static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
-@interface AnimalTableNodeController ()
+@interface AnimalTableController ()
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray <RainforestCardInfo *> *animals;
 @end
 
-@interface AnimalTableNodeController (DataSource)<UITableViewDataSource>
+@interface AnimalTableController (DataSource)<UITableViewDataSource>
 @end
 
-@interface AnimalTableNodeController (Delegate)<UITableViewDelegate>
+@interface AnimalTableController (Delegate)<UITableViewDelegate>
 @end
 
-@interface AnimalTableNodeController (Helpers)<ASTableDelegate>
+@interface AnimalTableController (Helpers)<ASTableDelegate>
 - (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block;
 - (void)insertNewRowsInTableView:(NSArray *)newAnimals;
 @end
 
 
-@implementation AnimalTableNodeController
+@implementation AnimalTableController
 
 #pragma mark - Lifecycle
 
@@ -84,7 +84,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 @end
 
 
-@implementation AnimalTableNodeController (DataSource)
+@implementation AnimalTableController (DataSource)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
@@ -106,7 +106,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 @end
 
 
-@implementation AnimalTableNodeController (Delegate)
+@implementation AnimalTableController (Delegate)
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
   return self.view.bounds.size.height;
@@ -115,7 +115,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 @end
 
 
-@implementation AnimalTableNodeController (Helpers)
+@implementation AnimalTableController (Helpers)
 
 - (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block {
 //  NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];

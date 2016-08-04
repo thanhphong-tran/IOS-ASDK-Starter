@@ -20,27 +20,43 @@
  * THE SOFTWARE.
  */
 
-#import "AppDelegate.h"
-#import "AnimalTableNodeController.h"
-#import "RainforestCardInfo.h"
-#import "ViewController.h"
+#import "CardNode_InterfaceCallbacks.h"
 
-@interface AppDelegate ()
+@implementation CardNode (InterfaceCallbacks)
 
-@end
+#pragma mark - Interface Callbacks
 
-@implementation AppDelegate
+- (void)visibleStateDidChange:(BOOL)isVisible {
+  [super visibleStateDidChange:isVisible];
+  if (!self.name) { return; }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  [self installRootViewController];
-  [self.window makeKeyAndVisible];
-  return YES;
+  if (isVisible) {
+    NSLog(@"%@ is visible!", self.name);
+  } else {
+    NSLog(@"%@ left the screen", self.name);
+  }
 }
 
-- (void)installRootViewController {
-  AnimalTableNodeController *vc = [[AnimalTableNodeController alloc] initWithAnimals:[RainforestCardInfo allAnimals]];
-  self.window.rootViewController = vc;
+- (void)loadStateDidChange:(BOOL)inLoadState {
+  [super loadStateDidChange:inLoadState];
+  if (!self.name) { return; }
+
+  if (inLoadState) {
+    NSLog(@"%@ is loading data!", self.name);
+  } else {
+    NSLog(@"%@ has left the data loading range.", self.name);
+  }
+}
+
+- (void)displayStateDidChange:(BOOL)inDisplayState {
+  [super displayStateDidChange:inDisplayState];
+  if (!self.name) { return; }
+
+  if (inDisplayState) {
+    NSLog(@"%@ has started rendering!", self.name);
+  } else {
+    NSLog(@"%@ has left the view display state.", self.name);
+  }
 }
 
 @end
