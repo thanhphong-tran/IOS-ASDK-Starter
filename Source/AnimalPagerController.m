@@ -29,7 +29,7 @@
 
 @interface AnimalPagerController ()
 @property (strong, nonatomic) ASPagerNode *pagerNode;
-@property (strong, nonatomic) NSArray *animals;
+@property (strong, nonatomic) NSArray<NSArray<RainforestCardInfo *> *> *animals;
 @end
 
 @interface AnimalPagerController (ASPagerDataSource)<ASPagerDataSource>
@@ -46,9 +46,6 @@
   _animals = @[[RainforestCardInfo birdCards],
                [RainforestCardInfo mammalCards],
                [RainforestCardInfo reptileCards]];
-
-  UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-  layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
   // Create and configure ASPagerNode instance here:
 

@@ -29,7 +29,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 @interface AnimalTableController ()
 @property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) NSMutableArray <RainforestCardInfo *> *animals;
+@property (strong, nonatomic) NSMutableArray<RainforestCardInfo *> *animals;
 @end
 
 @interface AnimalTableController (DataSource)<UITableViewDataSource>
@@ -38,7 +38,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 @interface AnimalTableController (Delegate)<UITableViewDelegate>
 @end
 
-@interface AnimalTableController (Helpers)<ASTableDelegate>
+@interface AnimalTableController (Helpers)
 - (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block;
 - (void)insertNewRowsInTableView:(NSArray *)newAnimals;
 @end
@@ -48,7 +48,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *> *)animals {
+- (instancetype)initWithAnimals:(NSArray<RainforestCardInfo *> *)animals {
 
   _animals = animals.mutableCopy;
   if (!(self = [super init])) { return nil; }
@@ -145,7 +145,7 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 //  }
 //
 //  [self.animals addObjectsFromArray:newAnimals];
-//  [self.node.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+//  [self.tableNode.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end

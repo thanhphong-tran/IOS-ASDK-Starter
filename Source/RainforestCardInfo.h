@@ -24,9 +24,9 @@
 
 @interface RainforestCardInfo : NSObject
 
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSString *animalDescription;
-@property (nonatomic) NSURL *imageURL;
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *animalDescription;
+@property (strong, nonatomic) NSURL *imageURL;
 
 + (NSArray <RainforestCardInfo *> *)birdCards;
 + (NSArray <RainforestCardInfo *> *)mammalCards;
