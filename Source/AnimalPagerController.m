@@ -43,14 +43,16 @@
 - (instancetype)init {
   if (!(self = [super init])) { return nil; }
 
-  self.animals = @[[RainforestCardInfo birdCards], [RainforestCardInfo mammalCards], [RainforestCardInfo reptileCards]];
+  _animals = @[[RainforestCardInfo birdCards],
+               [RainforestCardInfo mammalCards],
+               [RainforestCardInfo reptileCards]];
 
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
   layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
   // Create and configure ASPagerNode instance here:
 
-  self.pagerNode.backgroundColor = [UIColor blackColor];
+  _pagerNode.backgroundColor = [UIColor blackColor];
 
   return self;
 }

@@ -42,20 +42,20 @@
     return nil;
   }
 
-  self.backgroundImageView = [[UIImageView alloc] init];
-  self.animalImageView = [[UIImageView alloc] init];
-  self.animalNameLabel = [[UILabel alloc] init];
-  self.animalDescriptionTextView = [[UITextView alloc] init];
+  _backgroundImageView = [[UIImageView alloc] init];
+  _animalImageView = [[UIImageView alloc] init];
+  _animalNameLabel = [[UILabel alloc] init];
+  _animalDescriptionTextView = [[UITextView alloc] init];
 
   [self addSubview:self.backgroundImageView];
   [self addSubview:self.animalImageView];
   [self addSubview:self.animalNameLabel];
   [self addSubview:self.animalDescriptionTextView];
 
-  self.animalImageView.contentMode = UIViewContentModeScaleAspectFill;
+  _animalImageView.contentMode = UIViewContentModeScaleAspectFill;
 
-  self.animalDescriptionTextView.scrollEnabled = NO;
-  self.animalDescriptionTextView.backgroundColor = [UIColor clearColor];
+  _animalDescriptionTextView.scrollEnabled = NO;
+  _animalDescriptionTextView.backgroundColor = [UIColor clearColor];
 
   self.clipsToBounds = YES;
 

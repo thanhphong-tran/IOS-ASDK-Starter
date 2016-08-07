@@ -49,9 +49,9 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 #pragma mark - Lifecycle
 
 - (instancetype)initWithAnimals:(NSArray <RainforestCardInfo *> *)animals {
-  if (!(self = [super init])) { return nil; }
 
-  self.animals = animals.mutableCopy;
+  _animals = animals.mutableCopy;
+  if (!(self = [super init])) { return nil; }
 
   return self;
 }
@@ -62,9 +62,8 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
   self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
   [self.tableView registerClass:[CardCell class] forCellReuseIdentifier:kCellReuseIdentifier];
 
-  self.tableView.dataSource = self;
-  self.tableView.delegate = self;
-  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+  [self wireDelegation];
+  [self applyStyle];
 
   [self.view addSubview:self.tableView];
 }
@@ -75,7 +74,20 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
   self.tableView.frame = self.view.bounds;
 }
 
-#pragma mark - View Controller Appearance
+#pragma mark - Delegation
+
+- (void)wireDelegation {
+  self.tableView.dataSource = self;
+  self.tableView.delegate = self;
+}
+
+
+#pragma mark - Appearance
+
+- (void)applyStyle {
+  self.view.backgroundColor = [UIColor blackColor];
+  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+}
 
 - (BOOL)prefersStatusBarHidden {
   return YES;
@@ -86,8 +98,8 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
 
 @implementation AnimalTableController (DataSource)
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-  return 1;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+  return self.animals.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -97,10 +109,6 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
   cell.animalInfo = self.animals[indexPath.row];
 
   return cell;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return self.animals.count;
 }
 
 @end

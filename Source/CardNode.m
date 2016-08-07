@@ -47,43 +47,43 @@
 - (instancetype)initWithAnimal:(RainforestCardInfo *)animalInfo; {
   if (!(self = [super init])) { return nil; }
 
-  self.animalInfo = animalInfo;
+  _animalInfo = animalInfo;
 
   self.backgroundColor = [UIColor lightGrayColor];
   self.clipsToBounds = YES;
 
-  self.backgroundImageNode = [[ASImageNode alloc] init];
-  self.animalImageNode = [[ASNetworkImageNode alloc] init];
-  self.animalNameTextNode = [[ASTextNode alloc] init];
-  self.animalDescriptionTextNode = [[ASTextNode alloc] init];
-  self.gradientNode = [[GradientNode alloc] init];
+  _backgroundImageNode = [[ASImageNode alloc] init];
+  _animalImageNode = [[ASNetworkImageNode alloc] init];
+  _animalNameTextNode = [[ASTextNode alloc] init];
+  _animalDescriptionTextNode = [[ASTextNode alloc] init];
+  _gradientNode = [[GradientNode alloc] init];
 
   //Animal Image
-  self.animalImageNode.URL = self.animalInfo.imageURL;
-  self.animalImageNode.clipsToBounds = YES;
-  self.animalImageNode.delegate = self;
-  self.animalImageNode.placeholderFadeDuration = 0.15;
-  self.animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
+  _animalImageNode.URL = self.animalInfo.imageURL;
+  _animalImageNode.clipsToBounds = YES;
+  _animalImageNode.delegate = self;
+  _animalImageNode.placeholderFadeDuration = 0.15;
+  _animalImageNode.contentMode = UIViewContentModeScaleAspectFill;
 
   //Animal Name
-  self.animalNameTextNode.attributedString = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
+  _animalNameTextNode.attributedString = [NSAttributedString attributedStringForTitleText:self.animalInfo.name];
 
   //Animal Description
-  self.animalDescriptionTextNode.attributedString = [NSAttributedString attributedStringForDescription:self.animalInfo.animalDescription];
-  self.animalDescriptionTextNode.truncationAttributedString = [NSAttributedString attributedStringForDescription:@"…"];
-  self.animalDescriptionTextNode.backgroundColor = [UIColor clearColor];
+  _animalDescriptionTextNode.attributedString = [NSAttributedString attributedStringForDescription:self.animalInfo.animalDescription];
+  _animalDescriptionTextNode.truncationAttributedString = [NSAttributedString attributedStringForDescription:@"…"];
+  _animalDescriptionTextNode.backgroundColor = [UIColor clearColor];
 
   //Background Image
-  self.backgroundImageNode.placeholderFadeDuration = 0.15;
-  self.backgroundImageNode.imageModificationBlock = ^(UIImage *image) {
+  _backgroundImageNode.placeholderFadeDuration = 0.15;
+  _backgroundImageNode.imageModificationBlock = ^(UIImage *image) {
     UIColor *tintColor = [UIColor colorWithWhite:0.5 alpha:0.3];
     UIImage *newImage = [image applyBlurWithRadius:30 tintColor:tintColor saturationDeltaFactor:1.8 maskImage:nil];
     return newImage ?: image;
   };
 
   //Gradient Node
-  self.gradientNode.layerBacked = YES;
-  self.gradientNode.opaque = NO;
+  _gradientNode.layerBacked = YES;
+  _gradientNode.opaque = NO;
 
   [self addSubnode:self.backgroundImageNode];
   [self addSubnode:self.animalImageNode];
