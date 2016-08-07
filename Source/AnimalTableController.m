@@ -81,7 +81,6 @@ static NSString *kCellReuseIdentifier = @"CellReuseIdentifier";
   self.tableView.delegate = self;
 }
 
-
 #pragma mark - Appearance
 
 - (void)applyStyle {

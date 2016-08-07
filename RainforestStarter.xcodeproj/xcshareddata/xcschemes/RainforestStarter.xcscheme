@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-               BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+               BuildableName = "RainforestStarter.app"
                BlueprintName = "RainForestStarter"
                ReferencedContainer = "container:RainforestStarter.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-            BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+            BuildableName = "RainforestStarter.app"
             BlueprintName = "RainForestStarter"
             ReferencedContainer = "container:RainforestStarter.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-            BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+            BuildableName = "RainforestStarter.app"
             BlueprintName = "RainForestStarter"
             ReferencedContainer = "container:RainforestStarter.xcodeproj">
          </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE2FB4891C821D0C003AD243"
-            BuildableName = "RainforestStarter.temp_caseinsensitive_rename.app"
+            BuildableName = "RainforestStarter.app"
             BlueprintName = "RainForestStarter"
             ReferencedContainer = "container:RainforestStarter.xcodeproj">
          </BuildableReference>
