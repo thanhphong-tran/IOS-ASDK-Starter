@@ -49,7 +49,7 @@
 		9FF736E41D5376DA009B70D9 /* AnimalPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnimalPagerController.m; path = Source/AnimalPagerController.m; sourceTree = "<group>"; };
 		9FF736F01D5376E3009B70D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9FF736F41D53770B009B70D9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AE2FB48A1C821D0C003AD243 /* RainforestStarter.temp_caseinsensitive_rename.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RainforestStarter.temp_caseinsensitive_rename.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE2FB48A1C821D0C003AD243 /* RainforestStarter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RainforestStarter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +124,7 @@
 		AE2FB48B1C821D0C003AD243 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AE2FB48A1C821D0C003AD243 /* RainforestStarter.temp_caseinsensitive_rename.app */,
+				AE2FB48A1C821D0C003AD243 /* RainforestStarter.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -157,7 +157,7 @@
 			);
 			name = RainForestStarter;
 			productName = RainForestFinal;
-			productReference = AE2FB48A1C821D0C003AD243 /* RainforestStarter.temp_caseinsensitive_rename.app */;
+			productReference = AE2FB48A1C821D0C003AD243 /* RainforestStarter.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -361,7 +361,7 @@
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.RainforestStarter;
-				PRODUCT_NAME = RainforestStarter.temp_caseinsensitive_rename;
+				PRODUCT_NAME = RainforestStarter;
 			};
 			name = Debug;
 		};
@@ -373,7 +373,7 @@
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.RainforestStarter;
-				PRODUCT_NAME = RainforestStarter.temp_caseinsensitive_rename;
+				PRODUCT_NAME = RainforestStarter;
 			};
 			name = Release;
 		};
