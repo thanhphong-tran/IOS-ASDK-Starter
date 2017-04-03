@@ -59,6 +59,8 @@
 
     [self.view addSubnode:self.tableNode];
     [self applyStyle];
+    
+    self.tableNode.view.leadingScreensForBatching = 1.0;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -98,6 +100,8 @@
     RainforestCardInfo *animal = self.animals[indexPath.row];
     return ^{
       CardNode *cardNode = [[CardNode alloc] initWithAnimal:animal];
+        
+      cardNode.debugName = [NSString stringWithFormat:@"cell %zd", indexPath.row];
       return cardNode;
     };
 }
@@ -107,11 +111,25 @@
 
 @implementation AnimalTableController (Delegate)
 
-- (ASSizeRange)tableView:(ASTableView *)tableNode constrainedSizeForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (ASSizeRange)tableNode:(ASTableNode *)tableNode constrainedSizeForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGSize min = CGSizeMake(width, ([UIScreen mainScreen].bounds.size.height/3) * 2);
     CGSize max = CGSizeMake(width, INFINITY);
     return ASSizeRangeMake(min, max);
+}
+
+-(BOOL)shouldBatchFetchForTableNode:(ASTableNode *)tableNode {
+    return YES;
+}
+
+-(void)tableNode:(ASTableNode *)tableNode willBeginBatchFetchWithContext:(ASBatchContext *)context {
+    [self retrieveNextPageWithCompletion:^(NSArray *animals) {
+        //2
+        [self insertNewRowsInTableNode:animals];
+        
+        //3
+        [context completeBatchFetching:YES];
+    }];
 }
 
 @end
@@ -119,26 +137,26 @@
 @implementation AnimalTableController (Helpers)
 
 - (void)retrieveNextPageWithCompletion:(void (^)(NSArray *))block {
-//  NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
-//  
-//  // Important: this block must run on the main thread
-//  dispatch_async(dispatch_get_main_queue(), ^{
-//    block(moreAnimals);
-//  });
+  NSArray *moreAnimals = [[NSArray alloc] initWithArray:[self.animals subarrayWithRange:NSMakeRange(0, 5)] copyItems:NO];
+  
+  // Important: this block must run on the main thread
+  dispatch_async(dispatch_get_main_queue(), ^{
+    block(moreAnimals);
+  });
 }
 
 - (void)insertNewRowsInTableNode:(NSArray *)newAnimals {
-//  NSInteger section = 0;
-//  NSMutableArray *indexPaths = [NSMutableArray array];
-//  
-//  NSUInteger newTotalNumberOfPhotos = self.animals.count + newAnimals.count;
-//  for (NSUInteger row = self.animals.count; row < newTotalNumberOfPhotos; row++) {
-//    NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
-//    [indexPaths addObject:path];
-//  }
-//  
-//  [self.animals addObjectsFromArray:newAnimals];
-//  [self.tableNode insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+  NSInteger section = 0;
+  NSMutableArray *indexPaths = [NSMutableArray array];
+  
+  NSUInteger newTotalNumberOfPhotos = self.animals.count + newAnimals.count;
+  for (NSUInteger row = self.animals.count; row < newTotalNumberOfPhotos; row++) {
+    NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
+    [indexPaths addObject:path];
+  }
+  
+  [self.animals addObjectsFromArray:newAnimals];
+  [self.tableNode insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end

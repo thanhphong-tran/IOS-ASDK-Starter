@@ -48,6 +48,9 @@
                [RainforestCardInfo reptileCards]];
 
   // Create and configure ASPagerNode instance here:
+    
+  _pagerNode = [[ASPagerNode alloc] init];
+  _pagerNode.dataSource = self;
 
   _pagerNode.backgroundColor = [UIColor blackColor];
 
@@ -77,7 +80,21 @@
 @implementation AnimalPagerController (ASPagerDataSource)
 
 - (NSInteger)numberOfPagesInPagerNode:(ASPagerNode *)pagerNode {
-  return 0;
+    return self.animals.count;
+}
+
+
+- (ASCellNode *)pagerNode:(ASPagerNode *)pagerNode nodeAtIndex:(NSInteger)index {
+    //1
+    CGSize pagerNodeSize = pagerNode.bounds.size;
+    NSArray *animals = self.animals[index];
+    
+    //2
+    ASCellNode *node = [[ASCellNode alloc] initWithViewControllerBlock:^{
+        return [[AnimalTableController alloc] initWithAnimals:animals];
+    } didLoadBlock:nil];
+    
+    return node;
 }
 
 @end
